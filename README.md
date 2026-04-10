@@ -168,7 +168,7 @@ Analysis runs once per schema, not per render. Only the changed field re-renders
 ## Contributing
 
 ```bash
-git clone https://github.com/ArunKBhaskar/FormWeave.git && cd FormWeave
+git clone https://github.com/amuralit/formweave.git && cd formweave
 pnpm install && pnpm turbo build && pnpm turbo test
 ```
 
