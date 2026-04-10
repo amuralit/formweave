@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FormWeave — Component Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ───── Reset & Tokens ───── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --font: 'Inter', system-ui, -apple-system, sans-serif;
+    --blue: #4285F4;
+    --blue-hover: #3367D6;
+    --border: #E4E4E7;
+    --bg: #F4F4F5;
+    --card: #FFFFFF;
+    --text: #18181B;
+    --text-secondary: #71717A;
+    --radius: 8px;
+    --shadow: 0 1px 3px rgba(0,0,0,.08), 0 4px 14px rgba(0,0,0,.04);
+    --ai-dot: linear-gradient(135deg, #8B5CF6, #3B82F6);
+
+    /* Salesforce */
+    --sf-blue: #0176D3;
+
+    /* Dark mode overrides */
+    --dark-bg: #09090B;
+    --dark-card: #18181B;
+    --dark-border: #27272A;
+    --dark-text: #FAFAFA;
+    --dark-text-secondary: #A1A1AA;
+  }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    padding: 48px 20px 80px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ───── Page Layout ───── */
+  .page-title {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+  }
+  .page-subtitle {
+    text-align: center;
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin-bottom: 48px;
+  }
+
+  .card-wrapper {
+    max-width: 440px;
+    margin: 0 auto 56px;
+  }
+
+  /* ───── Card ───── */
+  .card {
+    background: var(--card);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  /* ───── Accent Bar ───── */
+  .accent-bar {
+    height: 4px;
+    background: linear-gradient(90deg, var(--blue) 0%, #34A853 50%, #FBBC05 75%, #EA4335 100%);
+  }
+  .accent-bar--sf {
+    background: linear-gradient(90deg, var(--sf-blue), #04A9F4);
+  }
+
+  /* ───── Form Header ───── */
+  .form-header {
+    padding: 20px 24px 0;
+  }
+  .form-header__brand {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+  }
+  .form-header__brand span.emoji {
+    font-size: 14px;
+    letter-spacing: 0;
+  }
+  .form-header__title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  /* ───── Divider ───── */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 16px 24px;
+  }
+
+  /* ───── Form Body ───── */
+  .form-body {
+    padding: 0 24px 24px;
+  }
+
+  /* ───── Title Input (Simulated) ───── */
+  .title-input {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 0;
+  }
+  .title-input__text {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1.15;
+    border: none;
+    outline: none;
+  }
+  .ai-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--ai-dot);
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  /* ───── Field Group ───── */
+  .field {
+    margin-bottom: 18px;
+  }
+  .field__label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    margin-bottom: 8px;
+  }
+
+  /* ───── DateTime Block ───── */
+  .datetime-block {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #EBF3FE;
+    border-left: 3px solid var(--blue);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 14px 16px;
+  }
+  .datetime-block__icon {
+    font-size: 20px;
+    color: var(--blue);
+    flex-shrink: 0;
+  }
+  .datetime-block__content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .datetime-block__date {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .datetime-block__time {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  /* ───── People Picker ───── */
+  .people-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+  .avatar-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #F4F4F5;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 4px 10px 4px 4px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    cursor: default;
+    transition: background .15s;
+  }
+  .avatar-pill:hover {
+    background: #E4E4E7;
+  }
+  .avatar-pill__circle {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .avatar-pill__circle--blue { background: var(--blue); }
+  .avatar-pill__circle--green { background: #34A853; }
+  .avatar-pill__close {
+    font-size: 15px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    margin-left: 2px;
+    line-height: 1;
+  }
+  .add-person-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1.5px dashed #C4C4C8;
+    border-radius: 100px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    background: transparent;
+    cursor: pointer;
+    transition: border-color .15s, color .15s;
+  }
+  .add-person-btn:hover {
+    border-color: var(--blue);
+    color: var(--blue);
+  }
+
+  /* ───── Toggle ───── */
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 0;
+  }
+  .toggle-row__label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .toggle-track {
+    width: 44px;
+    height: 24px;
+    background: #D4D4D8;
+    border-radius: 12px;
+    position: relative;
+    cursor: pointer;
+    transition: background .2s;
+  }
+  .toggle-track--on {
+    background: var(--blue);
+  }
+  .toggle-knob {
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.15);
+    transition: transform .2s;
+  }
+  .toggle-track--on .toggle-knob {
+    transform: translateX(20px);
+  }
+
+  /* ───── Pill Selector ───── */
+  .pill-selector {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .pill {
+    padding: 7px 16px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    background: transparent;
+    transition: all .15s;
+  }
+  .pill:hover {
+    border-color: #A1A1AA;
+    color: var(--text);
+  }
+  .pill--active {
+    background: var(--blue);
+    color: #fff;
+    border-color: var(--blue);
+  }
+  .pill--active:hover {
+    background: var(--blue-hover);
+    border-color: var(--blue-hover);
+    color: #fff;
+  }
+
+  /* ───── Progressive Disclosure ───── */
+  .expander {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 1.5px dashed #C4C4C8;
+    border-radius: var(--radius);
+    padding: 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: border-color .15s, color .15s;
+    margin-top: 4px;
+  }
+  .expander:hover {
+    border-color: var(--blue);
+    color: var(--blue);
+  }
+  .expander__icon {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  /* ───── Footer ───── */
+  .form-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 16px 24px;
+    border-top: 1px solid var(--border);
+  }
+  .btn {
+    padding: 9px 22px;
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-weight: 600;
+    font-family: var(--font);
+    cursor: pointer;
+    transition: all .15s;
+    border: none;
+  }
+  .btn--outline {
+    background: transparent;
+    border: 1.5px solid var(--border);
+    color: var(--text-secondary);
+  }
+  .btn--outline:hover {
+    border-color: #A1A1AA;
+    color: var(--text);
+  }
+  .btn--primary {
+    background: var(--blue);
+    color: #fff;
+    box-shadow: 0 1px 3px rgba(66,133,244,.35);
+  }
+  .btn--primary:hover {
+    background: var(--blue-hover);
+  }
+
+  /* ═══════════════════════════════════
+     SALESFORCE WIZARD
+     ═══════════════════════════════════ */
+
+  .step-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 24px 4px;
+    gap: 0;
+  }
+  .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    position: relative;
+    z-index: 1;
+  }
+  .step__circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    border: 2px solid #D4D4D8;
+    color: #A1A1AA;
+    background: var(--card);
+    transition: all .2s;
+  }
+  .step--active .step__circle {
+    background: var(--sf-blue);
+    border-color: var(--sf-blue);
+    color: #fff;
+  }
+  .step__label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #A1A1AA;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+  }
+  .step--active .step__label {
+    color: var(--sf-blue);
+  }
+  .step-line {
+    width: 56px;
+    height: 2px;
+    background: #D4D4D8;
+    margin-bottom: 20px;
+  }
+
+  /* SF fields */
+  .sf-field {
+    margin-bottom: 18px;
+  }
+  .sf-field__label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    margin-bottom: 8px;
+  }
+  .sf-title-input {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    border: none;
+    border-bottom: 2px solid var(--border);
+    padding: 6px 0;
+    width: 100%;
+    outline: none;
+    background: transparent;
+    font-family: var(--font);
+  }
+  .sf-title-input:focus {
+    border-color: var(--sf-blue);
+  }
+
+  /* Number stepper */
+  .number-stepper {
+    display: flex;
+    align-items: center;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    width: fit-content;
+  }
+  .number-stepper__prefix {
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: #F4F4F5;
+    border-right: 1.5px solid var(--border);
+  }
+  .number-stepper__value {
+    padding: 8px 16px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    min-width: 80px;
+    text-align: center;
+  }
+  .number-stepper__btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: #F4F4F5;
+    border: none;
+    border-left: 1.5px solid var(--border);
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .number-stepper__btn:hover {
+    background: #E4E4E7;
+  }
+
+  /* Date display */
+  .date-display {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    cursor: pointer;
+  }
+  .date-display__icon {
+    color: var(--text-secondary);
+    font-size: 16px;
+  }
+
+  .step-subtitle {
+    font-size: 13px;
+    color: var(--text-secondary);
+    padding: 0 24px 6px;
+    font-weight: 500;
+  }
+
+  /* SF pills */
+  .pill--sf-active {
+    background: var(--sf-blue);
+    color: #fff;
+    border-color: var(--sf-blue);
+  }
+  .pill--sf-active:hover {
+    background: #015AB5;
+    border-color: #015AB5;
+    color: #fff;
+  }
+
+  .btn--sf-primary {
+    background: var(--sf-blue);
+    box-shadow: 0 1px 3px rgba(1,118,211,.35);
+  }
+  .btn--sf-primary:hover {
+    background: #015AB5;
+  }
+
+  /* ═══════════════════════════════════
+     DARK MODE CARD
+     ═══════════════════════════════════ */
+
+  .dark-wrapper {
+    background: var(--dark-bg);
+    border-radius: 16px;
+    padding: 32px 20px;
+  }
+
+  .card--dark {
+    background: var(--dark-card);
+    box-shadow: 0 1px 3px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.2);
+  }
+  .card--dark .form-header__brand {
+    color: var(--dark-text-secondary);
+  }
+  .card--dark .form-header__title {
+    color: var(--dark-text);
+  }
+  .card--dark .title-input__text {
+    color: var(--dark-text);
+  }
+  .card--dark .divider {
+    background: var(--dark-border);
+  }
+  .card--dark .field__label {
+    color: var(--dark-text-secondary);
+  }
+  .card--dark .datetime-block {
+    background: rgba(66,133,244,.12);
+  }
+  .card--dark .datetime-block__date {
+    color: var(--dark-text);
+  }
+  .card--dark .datetime-block__time {
+    color: var(--dark-text-secondary);
+  }
+  .card--dark .avatar-pill {
+    background: var(--dark-border);
+    border-color: #3F3F46;
+    color: var(--dark-text);
+  }
+  .card--dark .avatar-pill:hover {
+    background: #3F3F46;
+  }
+  .card--dark .avatar-pill__close {
+    color: var(--dark-text-secondary);
+  }
+  .card--dark .add-person-btn {
+    border-color: #3F3F46;
+    color: var(--dark-text-secondary);
+  }
+  .card--dark .add-person-btn:hover {
+    border-color: var(--blue);
+    color: var(--blue);
+  }
+  .card--dark .toggle-row__label {
+    color: var(--dark-text);
+  }
+  .card--dark .toggle-track {
+    background: #3F3F46;
+  }
+  .card--dark .pill {
+    border-color: #3F3F46;
+    color: var(--dark-text-secondary);
+  }
+  .card--dark .pill:hover {
+    border-color: #52525B;
+    color: var(--dark-text);
+  }
+  .card--dark .pill--active {
+    background: var(--blue);
+    color: #fff;
+    border-color: var(--blue);
+  }
+  .card--dark .expander {
+    border-color: #3F3F46;
+    color: var(--dark-text-secondary);
+  }
+  .card--dark .expander:hover {
+    border-color: var(--blue);
+    color: var(--blue);
+  }
+  .card--dark .form-footer {
+    border-top-color: var(--dark-border);
+  }
+  .card--dark .btn--outline {
+    border-color: #3F3F46;
+    color: var(--dark-text-secondary);
+  }
+  .card--dark .btn--outline:hover {
+    border-color: #52525B;
+    color: var(--dark-text);
+  }
+
+  /* ───── Section Label ───── */
+  .section-label {
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #A1A1AA;
+    margin-bottom: 16px;
+  }
+  .section-label span {
+    background: var(--bg);
+    padding: 0 12px;
+    position: relative;
+  }
+</style>
+</head>
+<body>
+
+<p class="page-title">FormWeave</p>
+<p class="page-subtitle">Adaptive form component library &mdash; static preview</p>
+
+<!-- ═══════════════════════════════════════════
+     1. GOOGLE CALENDAR — CREATE EVENT
+     ═══════════════════════════════════════════ -->
+<div class="card-wrapper">
+  <p class="section-label"><span>Google Calendar &mdash; Light Mode</span></p>
+  <div class="card">
+    <!-- Accent gradient bar -->
+    <div class="accent-bar"></div>
+
+    <!-- Header -->
+    <div class="form-header">
+      <div class="form-header__brand">
+        <span class="emoji">&#x1F4C5;</span> GOOGLE CALENDAR
+      </div>
+      <div class="form-header__title">Create event</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="form-body">
+      <!-- Title Input -->
+      <div class="field">
+        <div class="title-input">
+          <span class="title-input__text">Design Review</span>
+          <span class="ai-dot" title="AI-assisted"></span>
+        </div>
+      </div>
+
+      <!-- DateTime Block -->
+      <div class="field">
+        <div class="field__label">Date &amp; Time</div>
+        <div class="datetime-block">
+          <div class="datetime-block__icon">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <rect x="2" y="4" width="16" height="14" rx="2" stroke="#4285F4" stroke-width="1.5" fill="none"/>
+              <line x1="2" y1="8" x2="18" y2="8" stroke="#4285F4" stroke-width="1.5"/>
+              <line x1="6" y1="2" x2="6" y2="6" stroke="#4285F4" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="14" y1="2" x2="14" y2="6" stroke="#4285F4" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="datetime-block__content">
+            <div class="datetime-block__date">Thu, Apr 10</div>
+            <div class="datetime-block__time">2:00 PM &mdash; 3:00 PM</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- People Picker -->
+      <div class="field">
+        <div class="field__label">People</div>
+        <div class="people-picker">
+          <div class="avatar-pill">
+            <div class="avatar-pill__circle avatar-pill__circle--blue">A</div>
+            Arun
+            <span class="avatar-pill__close">&times;</span>
+          </div>
+          <div class="avatar-pill">
+            <div class="avatar-pill__circle avatar-pill__circle--green">S</div>
+            Sarah
+            <span class="avatar-pill__close">&times;</span>
+          </div>
+          <button class="add-person-btn">+ Add</button>
+        </div>
+      </div>
+
+      <!-- Toggle -->
+      <div class="field">
+        <div class="toggle-row">
+          <span class="toggle-row__label">All day</span>
+          <div class="toggle-track">
+            <div class="toggle-knob"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pill Selector -->
+      <div class="field">
+        <div class="field__label">Recurrence</div>
+        <div class="pill-selector">
+          <span class="pill pill--active">None</span>
+          <span class="pill">Daily</span>
+          <span class="pill">Weekly</span>
+          <span class="pill">Monthly</span>
+        </div>
+      </div>
+
+      <!-- Progressive Disclosure -->
+      <div class="expander">
+        <span class="expander__icon">+</span>
+        Add location, notes, or conference
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="form-footer">
+      <button class="btn btn--outline">Cancel</button>
+      <button class="btn btn--primary">Create event</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     2. SALESFORCE — CREATE OPPORTUNITY WIZARD
+     ═══════════════════════════════════════════ -->
+<div class="card-wrapper">
+  <p class="section-label"><span>Salesforce &mdash; Create Opportunity</span></p>
+  <div class="card">
+    <!-- Accent bar -->
+    <div class="accent-bar accent-bar--sf"></div>
+
+    <!-- Header -->
+    <div class="form-header">
+      <div class="form-header__brand">
+        <span class="emoji">&#x2601;&#xFE0F;</span> SALESFORCE
+      </div>
+      <div class="form-header__title">Create Opportunity</div>
+    </div>
+
+    <!-- Step Indicator -->
+    <div class="step-indicator">
+      <div class="step step--active">
+        <div class="step__circle">1</div>
+        <div class="step__label">Details</div>
+      </div>
+      <div class="step-line"></div>
+      <div class="step">
+        <div class="step__circle">2</div>
+        <div class="step__label">Contact</div>
+      </div>
+      <div class="step-line"></div>
+      <div class="step">
+        <div class="step__circle">3</div>
+        <div class="step__label">Address</div>
+      </div>
+      <div class="step-line"></div>
+      <div class="step">
+        <div class="step__circle">4</div>
+        <div class="step__label">Settings</div>
+      </div>
+    </div>
+
+    <div class="step-subtitle">Step 1 of 4 &mdash; Details</div>
+
+    <div class="divider"></div>
+
+    <div class="form-body">
+      <!-- Name -->
+      <div class="sf-field">
+        <div class="sf-field__label">Opportunity Name</div>
+        <input class="sf-title-input" value="Acme Corp — Enterprise Plan" readonly />
+      </div>
+
+      <!-- Stage -->
+      <div class="sf-field">
+        <div class="sf-field__label">Stage</div>
+        <div class="pill-selector">
+          <span class="pill pill--sf-active">Prospecting</span>
+          <span class="pill">Qualification</span>
+          <span class="pill">Proposal</span>
+          <span class="pill">Closed Won</span>
+        </div>
+      </div>
+
+      <!-- Amount -->
+      <div class="sf-field">
+        <div class="sf-field__label">Amount</div>
+        <div class="number-stepper">
+          <div class="number-stepper__prefix">$</div>
+          <div class="number-stepper__value">48,000</div>
+          <button class="number-stepper__btn">&minus;</button>
+          <button class="number-stepper__btn">+</button>
+        </div>
+      </div>
+
+      <!-- Close Date -->
+      <div class="sf-field">
+        <div class="sf-field__label">Close Date</div>
+        <div class="date-display">
+          <span class="date-display__icon">
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+              <rect x="2" y="4" width="16" height="14" rx="2" stroke="#71717A" stroke-width="1.5" fill="none"/>
+              <line x1="2" y1="8" x2="18" y2="8" stroke="#71717A" stroke-width="1.5"/>
+              <line x1="6" y1="2" x2="6" y2="6" stroke="#71717A" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="14" y1="2" x2="14" y2="6" stroke="#71717A" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </span>
+          Jun 30, 2026
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="form-footer">
+      <button class="btn btn--primary btn--sf-primary">Next</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     3. GOOGLE CALENDAR — DARK MODE
+     ═══════════════════════════════════════════ -->
+<div class="card-wrapper">
+  <p class="section-label"><span>Google Calendar &mdash; Dark Mode</span></p>
+  <div class="dark-wrapper">
+    <div class="card card--dark">
+      <!-- Accent gradient bar -->
+      <div class="accent-bar"></div>
+
+      <!-- Header -->
+      <div class="form-header">
+        <div class="form-header__brand">
+          <span class="emoji">&#x1F4C5;</span> GOOGLE CALENDAR
+        </div>
+        <div class="form-header__title">Create event</div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="form-body">
+        <!-- Title Input -->
+        <div class="field">
+          <div class="title-input">
+            <span class="title-input__text">Design Review</span>
+            <span class="ai-dot" title="AI-assisted"></span>
+          </div>
+        </div>
+
+        <!-- DateTime Block -->
+        <div class="field">
+          <div class="field__label">Date &amp; Time</div>
+          <div class="datetime-block">
+            <div class="datetime-block__icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <rect x="2" y="4" width="16" height="14" rx="2" stroke="#4285F4" stroke-width="1.5" fill="none"/>
+                <line x1="2" y1="8" x2="18" y2="8" stroke="#4285F4" stroke-width="1.5"/>
+                <line x1="6" y1="2" x2="6" y2="6" stroke="#4285F4" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="14" y1="2" x2="14" y2="6" stroke="#4285F4" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="datetime-block__content">
+              <div class="datetime-block__date">Thu, Apr 10</div>
+              <div class="datetime-block__time">2:00 PM &mdash; 3:00 PM</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- People Picker -->
+        <div class="field">
+          <div class="field__label">People</div>
+          <div class="people-picker">
+            <div class="avatar-pill">
+              <div class="avatar-pill__circle avatar-pill__circle--blue">A</div>
+              Arun
+              <span class="avatar-pill__close">&times;</span>
+            </div>
+            <div class="avatar-pill">
+              <div class="avatar-pill__circle avatar-pill__circle--green">S</div>
+              Sarah
+              <span class="avatar-pill__close">&times;</span>
+            </div>
+            <button class="add-person-btn">+ Add</button>
+          </div>
+        </div>
+
+        <!-- Toggle -->
+        <div class="field">
+          <div class="toggle-row">
+            <span class="toggle-row__label">All day</span>
+            <div class="toggle-track">
+              <div class="toggle-knob"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pill Selector -->
+        <div class="field">
+          <div class="field__label">Recurrence</div>
+          <div class="pill-selector">
+            <span class="pill pill--active">None</span>
+            <span class="pill">Daily</span>
+            <span class="pill">Weekly</span>
+            <span class="pill">Monthly</span>
+          </div>
+        </div>
+
+        <!-- Progressive Disclosure -->
+        <div class="expander">
+          <span class="expander__icon">+</span>
+          Add location, notes, or conference
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="form-footer">
+        <button class="btn btn--outline">Cancel</button>
+        <button class="btn btn--primary">Create event</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

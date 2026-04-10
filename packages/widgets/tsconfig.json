@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "paths": {
+      "@formweave/core": ["../core/src/types.ts"]
+    }
+  },
+  "include": ["src"]
+}

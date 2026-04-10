@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FormWeave — Live Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: #f4f4f5;
+      padding: 40px 20px;
+      min-height: 100vh;
+    }
+    .demo-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(440px, 1fr));
+      gap: 40px;
+    }
+    .demo-section {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .demo-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #71717a;
+    }
+    h1 {
+      text-align: center;
+      font-size: 24px;
+      font-weight: 700;
+      color: #18181b;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      text-align: center;
+      color: #71717a;
+      font-size: 14px;
+      margin-bottom: 40px;
+    }
+  </style>
+</head>
+<body>
+  <h1>FormWeave — Live Component Demo</h1>
+  <p class="subtitle">Real React components rendering from JSON Schema at runtime</p>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+</html>

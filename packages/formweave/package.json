@@ -1,0 +1,46 @@
+{
+  "name": "formweave",
+  "version": "1.0.0",
+  "description": "Beautiful, intelligent forms from JSON Schema — at runtime, in under 1ms",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "sideEffects": false,
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts --external react --external react-dom && cp ../theme/dist/styles.css dist/styles.css 2>/dev/null || true",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@formweave/core": "workspace:*",
+    "@formweave/react": "workspace:*",
+    "@formweave/widgets": "workspace:*",
+    "@formweave/theme": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tsup": "^8.3.0",
+    "vitest": "^2.1.0",
+    "typescript": "^5.7.0"
+  },
+  "keywords": ["form", "json-schema", "react", "mcp", "agent", "ui"],
+  "license": "MIT"
+}
