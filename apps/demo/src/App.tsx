@@ -94,7 +94,7 @@ const stripeSchema = {
   type: 'object' as const,
   required: ['amount', 'currency'],
   properties: {
-    amount: { type: 'number', description: 'Amount in dollars' },
+    amount: { type: 'number' },
     currency: { type: 'string', enum: ['usd', 'eur', 'gbp'] },
     description: { type: 'string' },
     customer_email: { type: 'string', format: 'email' },
