@@ -415,29 +415,29 @@
   padding: 0 !important;
 }
 
-/* [Issue 6] Location input: 1px solid #E5E5E5, 8px radius, 34px height */
+/* Text Input — inline-editable: borderless by default, border on hover/focus */
 .fw-text-input__native {
   width: 100%;
-  padding: 6px 10px;
-  height: 34px;
-  border: 1.5px solid var(--fw-o-border);
-  border-radius: var(--fw-o-radius-field);
-  font-size: 13px;
+  padding: 5px 6px;
+  border: 1.5px solid transparent;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
   color: var(--fw-o-text);
-  background: var(--fw-o-bg-input);
+  background: transparent;
   outline: none !important;
-  transition: border-color var(--fw-o-transition-ease),
-              box-shadow var(--fw-o-transition-ease),
-              background var(--fw-o-transition-ease);
+  transition: all 0.15s ease;
   box-sizing: border-box;
 }
-.fw-text-input__native:hover { border-color: #ccc; background: #f7f7f7; }
+.fw-text-input__native:hover {
+  background: rgba(0,0,0,0.025);
+}
 .fw-text-input__native:focus {
   border-color: var(--fw-o-primary);
   background: #fff;
   box-shadow: var(--fw-o-focus-ring);
 }
-.fw-text-input__native::placeholder { color: var(--fw-o-text-placeholder); }
+.fw-text-input__native::placeholder { color: #ccc; font-weight: 400; }
 
 .fw-text-input__footer { display: flex; justify-content: space-between; }
 .fw-text-input__error { font-size: 12px; color: #e53e3e; }
@@ -559,18 +559,18 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 6px 12px;
-  height: 34px;
-  border: 1.5px solid var(--fw-o-border);
-  border-radius: var(--fw-o-radius-field);
-  font-size: 13px;
+  padding: 5px 6px;
+  border: 1.5px solid transparent;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
   color: var(--fw-o-text);
-  background: var(--fw-o-bg-input);
+  background: transparent;
   cursor: pointer;
-  transition: border-color 0.15s;
+  transition: all 0.15s ease;
   box-sizing: border-box;
 }
-.fw-dropdown__trigger:hover { border-color: #ccc; }
+.fw-dropdown__trigger:hover { background: rgba(0,0,0,0.025); }
 .fw-dropdown__chevron { font-size: 10px; color: #bbb; }
 
 .fw-dropdown__overlay {
@@ -676,17 +676,20 @@
 .fw-number-stepper__controls {
   display: inline-flex;
   align-items: center;
-  border: 1.5px solid var(--fw-o-border);
-  border-radius: var(--fw-o-radius-field);
+  border: 1.5px solid transparent;
+  border-radius: 6px;
   overflow: hidden;
+  transition: all 0.15s ease;
 }
+.fw-number-stepper__controls:hover { background: rgba(0,0,0,0.025); }
 .fw-number-stepper__btn {
-  width: 34px; height: 34px;
+  width: 30px; height: 30px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 16px; color: #888; cursor: pointer; background: none;
-  border: none; transition: background 0.1s;
+  font-size: 15px; color: #999; cursor: pointer; background: none;
+  border: none; transition: all 0.1s;
+  border-radius: 4px;
 }
-.fw-number-stepper__btn:hover { background: #f5f5f5; }
+.fw-number-stepper__btn:hover { background: rgba(0,0,0,0.06); color: #555; }
 .fw-number-stepper__value {
   padding: 0 14px; font-size: 14px; font-weight: 600;
   color: var(--fw-o-text); min-width: 44px; text-align: center;
@@ -712,22 +715,21 @@
 /* [Issue 2] Focus ring matches text inputs; [Issue 11] No resize handle */
 .fw-textarea__native {
   width: 100%;
-  padding: 8px 10px;
-  border: 1.5px solid var(--fw-o-border);
-  border-radius: var(--fw-o-radius-field);
-  font-size: 13px;
+  padding: 5px 6px;
+  border: 1.5px solid transparent;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
   color: var(--fw-o-text);
-  background: var(--fw-o-bg-input);
+  background: transparent;
   outline: none !important;
   resize: none;
-  min-height: 68px;
-  transition: border-color var(--fw-o-transition-ease),
-              box-shadow var(--fw-o-transition-ease),
-              background var(--fw-o-transition-ease);
+  min-height: 36px;
+  transition: all 0.15s ease;
   font-family: inherit;
   line-height: 1.5;
 }
-.fw-textarea__native:hover { border-color: #ccc; background: #f7f7f7; }
+.fw-textarea__native:hover { background: rgba(0,0,0,0.025); }
 .fw-textarea__native:focus {
   border-color: var(--fw-o-primary);
   background: #fff;
@@ -745,15 +747,17 @@
 
 .fw-tag-input__container {
   display: flex; flex-wrap: wrap; gap: 5px; align-items: center;
-  padding: 5px 10px;
-  border: 1.5px solid var(--fw-o-border);
-  border-radius: var(--fw-o-radius-field);
-  min-height: 34px;
-  transition: border-color 0.15s, box-shadow 0.15s;
-  background: var(--fw-o-bg-input);
+  padding: 4px 6px;
+  border: 1.5px solid transparent;
+  border-radius: 6px;
+  min-height: 30px;
+  transition: all 0.15s ease;
+  background: transparent;
 }
+.fw-tag-input__container:hover { background: rgba(0,0,0,0.025); }
 .fw-tag-input__container:focus-within {
   border-color: var(--fw-o-primary);
+  background: #fff;
   box-shadow: var(--fw-o-focus-ring);
   background: #fff;
 }
