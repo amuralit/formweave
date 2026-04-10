@@ -1,4 +1,4 @@
-import { forwardRef, useId, useState, useCallback, useMemo } from 'react';
+import { forwardRef, useId, useRef, useState, useCallback, useMemo, useEffect } from 'react';
 import type { WidgetProps } from '@formweave/core';
 
 interface DateTimeValue {
@@ -16,13 +16,16 @@ function parseISO(iso: string): { date: string; time: string } {
   return { date, time };
 }
 
-function formatDateDisplay(iso: string): { dayNum: string; dayName: string; monthYear: string } {
+function formatDateDisplay(iso: string): { dayNum: string; dayName: string; monthYear: string; timeFormatted: string } {
   const d = new Date(iso);
-  if (isNaN(d.getTime())) return { dayNum: '--', dayName: '---', monthYear: '' };
+  if (isNaN(d.getTime())) return { dayNum: '--', dayName: '---', monthYear: '', timeFormatted: '' };
   const dayNum = String(d.getDate());
-  const dayName = d.toLocaleDateString(undefined, { weekday: 'short' });
+  const now = new Date();
+  const isToday = d.getDate() === now.getDate() && d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+  const dayName = isToday ? 'Today' : d.toLocaleDateString(undefined, { weekday: 'short' });
   const monthYear = d.toLocaleDateString(undefined, { month: 'short', year: 'numeric' });
-  return { dayNum, dayName, monthYear };
+  const timeFormatted = d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit', hour12: true });
+  return { dayNum, dayName, monthYear, timeFormatted };
 }
 
 function durationBetween(start: string, end: string): string {
@@ -56,7 +59,20 @@ export const DateTimeBlock = forwardRef<HTMLDivElement, WidgetProps<string | Dat
   ) {
     const id = useId();
     const [editMode, setEditMode] = useState(false);
+    const editorRef = useRef<HTMLDivElement>(null);
     const paired = config.group === 'datetime';
+
+    // Auto-close editor on click outside
+    useEffect(() => {
+      if (!editMode) return;
+      const handler = (e: MouseEvent) => {
+        if (editorRef.current && !editorRef.current.contains(e.target as Node)) {
+          setEditMode(false);
+        }
+      };
+      document.addEventListener('mousedown', handler);
+      return () => document.removeEventListener('mousedown', handler);
+    }, [editMode]);
 
     const normalizedValue = useMemo<DateTimeValue>(() => {
       if (value == null) return {};
@@ -155,47 +171,73 @@ export const DateTimeBlock = forwardRef<HTMLDivElement, WidgetProps<string | Dat
             disabled={disabled}
             aria-label={`Edit ${config.label}`}
           >
-            <div className="fw-datetime__block">
-              {startDisplay ? (
-                <>
-                  <span className="fw-datetime__day-num">{startDisplay.dayNum}</span>
-                  <span className="fw-datetime__day-name">{startDisplay.dayName}</span>
-                  <span className="fw-datetime__month">{startDisplay.monthYear}</span>
-                  {startTime && (
-                    <span className="fw-datetime__time">{startTime}</span>
-                  )}
-                </>
-              ) : (
-                <span className="fw-datetime__placeholder">Set date</span>
-              )}
-            </div>
+            {startDisplay ? (
+              (() => {
+                const sameDay = paired && endDisplay &&
+                  startDisplay.dayNum === endDisplay.dayNum &&
+                  startDisplay.monthYear === endDisplay.monthYear;
 
-            {paired && (
-              <>
-                <span className="fw-datetime__separator">&rarr;</span>
-                <div className="fw-datetime__block">
-                  {endDisplay ? (
+                if (sameDay) {
+                  // Same day: "10 Fri, Apr 2026    2:00 PM → 3:00 PM   1h"
+                  return (
                     <>
-                      <span className="fw-datetime__day-num">{endDisplay.dayNum}</span>
-                      <span className="fw-datetime__day-name">{endDisplay.dayName}</span>
-                      <span className="fw-datetime__month">{endDisplay.monthYear}</span>
-                      {endTime && (
-                        <span className="fw-datetime__time">{endTime}</span>
-                      )}
+                      <div className="fw-datetime__block">
+                        <span className="fw-datetime__day-num">{startDisplay.dayNum}</span>
+                        <span className="fw-datetime__day-meta">
+                          <span className="fw-datetime__day-name">{startDisplay.dayName}</span>
+                          <span className="fw-datetime__month">{startDisplay.monthYear}</span>
+                        </span>
+                      </div>
+                      <div className="fw-datetime__time-range">
+                        <span className="fw-datetime__time">{startDisplay.timeFormatted}</span>
+                        <span className="fw-datetime__separator">&rarr;</span>
+                        <span className="fw-datetime__time">{endDisplay!.timeFormatted}</span>
+                      </div>
+                      {duration && <span className="fw-datetime__duration">{duration}</span>}
                     </>
-                  ) : (
-                    <span className="fw-datetime__placeholder">Set end</span>
-                  )}
-                </div>
-              </>
-            )}
+                  );
+                }
 
-            {duration && (
-              <span className="fw-datetime__duration">{duration}</span>
+                // Different days or single date
+                return (
+                  <>
+                    <div className="fw-datetime__block">
+                      <span className="fw-datetime__day-num">{startDisplay.dayNum}</span>
+                      <span className="fw-datetime__day-meta">
+                        <span className="fw-datetime__day-name">{startDisplay.dayName}</span>
+                        <span className="fw-datetime__month">{startDisplay.monthYear}</span>
+                      </span>
+                      <span className="fw-datetime__time">{startDisplay.timeFormatted || startTime}</span>
+                    </div>
+                    {paired && (
+                      <>
+                        <span className="fw-datetime__separator">&rarr;</span>
+                        <div className="fw-datetime__block">
+                          {endDisplay ? (
+                            <>
+                              <span className="fw-datetime__day-num">{endDisplay.dayNum}</span>
+                              <span className="fw-datetime__day-meta">
+                                <span className="fw-datetime__day-name">{endDisplay.dayName}</span>
+                                <span className="fw-datetime__month">{endDisplay.monthYear}</span>
+                              </span>
+                              <span className="fw-datetime__time">{endDisplay.timeFormatted || endTime}</span>
+                            </>
+                          ) : (
+                            <span className="fw-datetime__placeholder">Set end</span>
+                          )}
+                        </div>
+                      </>
+                    )}
+                    {duration && <span className="fw-datetime__duration">{duration}</span>}
+                  </>
+                );
+              })()
+            ) : (
+              <span className="fw-datetime__placeholder">Set date &amp; time</span>
             )}
           </button>
         ) : (
-          <div className="fw-datetime__editor">
+          <div className="fw-datetime__editor" ref={editorRef}>
             <div className="fw-datetime__row">
               <label className="fw-datetime__input-label">
                 {paired ? 'Start date' : 'Date'}
@@ -244,13 +286,7 @@ export const DateTimeBlock = forwardRef<HTMLDivElement, WidgetProps<string | Dat
               </div>
             )}
 
-            <button
-              type="button"
-              className="fw-datetime__done"
-              onClick={() => setEditMode(false)}
-            >
-              Done
-            </button>
+{/* Auto-saves on click outside — no button needed */}
           </div>
         )}
 

@@ -82,6 +82,20 @@ export const ProgressiveDisclosure = forwardRef<HTMLDivElement, ProgressiveDiscl
           </button>
         )}
 
+        {expanded && (
+          <button
+            type="button"
+            className="fw-progressive__collapse"
+            onClick={toggle}
+            aria-label="Collapse details"
+          >
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ marginRight: 6 }}>
+              <path d="M9 7.5L6 4.5L3 7.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            Less
+          </button>
+        )}
+
         <div
           id={`${id}-content`}
           ref={contentRef}
@@ -90,14 +104,6 @@ export const ProgressiveDisclosure = forwardRef<HTMLDivElement, ProgressiveDiscl
         >
           {expanded && (
             <div className="fw-progressive__inner">
-              <button
-                type="button"
-                className="fw-progressive__collapse"
-                onClick={toggle}
-                aria-label="Collapse details"
-              >
-                &minus; Hide details
-              </button>
               {children}
             </div>
           )}

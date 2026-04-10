@@ -26,7 +26,7 @@ export const TagInput = forwardRef<HTMLDivElement, WidgetProps<string[]>>(
     const [input, setInput] = useState('');
     const [removingIdx, setRemovingIdx] = useState<number | null>(null);
     const inputRef = useRef<HTMLInputElement>(null);
-    const tags = value ?? [];
+    const tags = Array.isArray(value) ? value : value ? [value] : [];
 
     const addTag = useCallback(
       (tag: string) => {
