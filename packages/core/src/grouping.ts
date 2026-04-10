@@ -45,7 +45,7 @@ function detectDatetimePairs(
   for (let i = 0; i < pairCount; i++) {
     groups.push({
       name: `datetime-pair-${i}`,
-      label: 'Date & time',
+      label: '',
       fields: [startFields[i], endFields[i]],
       type: 'datetime-pair',
     });

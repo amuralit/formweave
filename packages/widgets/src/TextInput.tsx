@@ -1,4 +1,4 @@
-import { forwardRef, useId, useRef, useState, useCallback } from 'react';
+import { forwardRef, useId, useRef, useCallback } from 'react';
 import type { WidgetProps } from '@formweave/core';
 
 export interface TextInputProps extends WidgetProps<string> {
@@ -22,13 +22,9 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
     ref,
   ) {
     const id = useId();
-    const [focused, setFocused] = useState(false);
     const innerRef = useRef<HTMLInputElement>(null);
     const inputRef = (ref as React.RefObject<HTMLInputElement>) ?? innerRef;
-
     const maxLength = config.constraints.maxLength;
-    const hasValue = value != null && value !== '';
-    const floated = focused || hasValue;
 
     const handleChange = useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,11 +35,8 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
 
     const rootCls = [
       'fw-text-input',
-      focused && 'fw-text-input--focused',
-      hasValue && 'fw-text-input--filled',
       error && 'fw-text-input--error',
       disabled && 'fw-text-input--disabled',
-      icon && 'fw-text-input--has-icon',
       className,
     ]
       .filter(Boolean)
@@ -51,9 +44,12 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
 
     return (
       <div className={rootCls}>
-        {icon && <span className="fw-text-input__icon">{icon}</span>}
+        <label htmlFor={id} className="fw-text-input__label">
+          {config.label}
+        </label>
 
         <div className="fw-text-input__field">
+          {icon && <span className="fw-text-input__icon">{icon}</span>}
           <input
             ref={inputRef}
             id={id}
@@ -61,38 +57,31 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
             className="fw-text-input__native"
             value={value ?? ''}
             onChange={handleChange}
-            onFocus={() => setFocused(true)}
-            onBlur={() => setFocused(false)}
             disabled={disabled}
             readOnly={readOnly}
             autoFocus={autoFocus}
-            placeholder={floated ? placeholder : undefined}
+            placeholder={placeholder ?? config.label}
             maxLength={maxLength}
             aria-invalid={!!error}
             aria-describedby={error ? `${id}-error` : undefined}
             aria-required={config.required}
           />
-
-          <label
-            htmlFor={id}
-            className={`fw-text-input__label${floated ? ' fw-text-input__label--floated' : ''}`}
-          >
-            {config.label}
-          </label>
         </div>
 
-        <div className="fw-text-input__footer">
-          {error && (
-            <span id={`${id}-error`} className="fw-text-input__error" role="alert">
-              {error}
-            </span>
-          )}
-          {maxLength != null && (
-            <span className="fw-text-input__count">
-              {(value ?? '').length}/{maxLength}
-            </span>
-          )}
-        </div>
+        {(error || maxLength != null) && (
+          <div className="fw-text-input__footer">
+            {error && (
+              <span id={`${id}-error`} className="fw-text-input__error" role="alert">
+                {error}
+              </span>
+            )}
+            {maxLength != null && (
+              <span className="fw-text-input__count">
+                {(value ?? '').length}/{maxLength}
+              </span>
+            )}
+          </div>
+        )}
       </div>
     );
   },

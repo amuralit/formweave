@@ -139,6 +139,8 @@ const FieldRenderer = memo(function FieldRenderer({ field, onBlur, onChange }: F
 
   const effectiveValue = value ?? field.constraints.default ?? (field.widget === 'toggle' ? false : '');
 
+  const isTitleInput = field.widget === 'title-input';
+
   return (
     <ConditionalWrapper conditions={field.conditions}>
       <div className={fieldCls} onBlur={handleBlur}>
@@ -150,8 +152,9 @@ const FieldRenderer = memo(function FieldRenderer({ field, onBlur, onChange }: F
           disabled={isDisabled}
           readOnly={isReadOnly}
           config={field}
+          placeholder={isTitleInput ? (field.description || 'Enter title...') : undefined}
         />
-        {field.description && !displayError && (
+        {field.description && !displayError && !isTitleInput && (
           <p className="fw-field__description">{field.description}</p>
         )}
       </div>
@@ -165,6 +168,78 @@ interface GroupedFieldRendererProps {
   fields: FieldDefinition[];
   onBlur: (path: string) => void;
   onChange: (path: string, value: any) => void;
+}
+
+function DateTimePairRenderer({
+  groupFields,
+  onBlur,
+  onChange,
+}: {
+  groupFields: FieldDefinition[];
+  onBlur: (path: string) => void;
+  onChange: (path: string, value: any) => void;
+}) {
+  const startField = groupFields[0];
+  const endField = groupFields[1];
+
+  const startState = useFormField(startField.path);
+  const endState = useFormField(endField.path);
+  const { mode } = useFormContext();
+
+  const isDisabled = mode === 'readonly';
+  const isReadOnly = mode === 'readonly';
+
+  // Build a merged config for the paired DateTimeBlock
+  const mergedConfig = useMemo(
+    () => ({
+      ...startField,
+      group: 'datetime' as const,
+      label: startField.groupLabel || 'Date & time',
+    }),
+    [startField],
+  );
+
+  // Combine start + end into a single DateTimeValue object
+  const pairedValue = useMemo(
+    () => ({
+      start: startState.value ?? '',
+      end: endState.value ?? '',
+    }),
+    [startState.value, endState.value],
+  );
+
+  const handlePairedChange = useCallback(
+    (newValue: any) => {
+      if (typeof newValue === 'object' && newValue !== null) {
+        if (newValue.start !== undefined) {
+          startState.setValue(newValue.start);
+          onChange(startField.path, newValue.start);
+        }
+        if (newValue.end !== undefined) {
+          endState.setValue(newValue.end);
+          onChange(endField.path, newValue.end);
+        }
+      }
+    },
+    [startState, endState, onChange, startField.path, endField.path],
+  );
+
+  const handleBlur = useCallback(() => {
+    onBlur(startField.path);
+    onBlur(endField.path);
+  }, [onBlur, startField.path, endField.path]);
+
+  return (
+    <div className="fw-field fw-field--datetime-block" onBlur={handleBlur}>
+      <WidgetRenderer
+        value={pairedValue}
+        onChange={handlePairedChange}
+        disabled={isDisabled}
+        readOnly={isReadOnly}
+        config={mergedConfig}
+      />
+    </div>
+  );
 }
 
 function GroupedFieldRenderer({ fields, onBlur, onChange }: GroupedFieldRendererProps) {
@@ -181,23 +256,36 @@ function GroupedFieldRenderer({ fields, onBlur, onChange }: GroupedFieldRenderer
       );
       groupFields.forEach((f) => rendered.add(f.path));
 
-      elements.push(
-        <div
-          key={`group-${field.group}`}
-          className="fw-field-group"
-          role="group"
-          aria-label={field.groupLabel}
-        >
-          {field.groupLabel && (
-            <span className="fw-field-group__label">{field.groupLabel}</span>
-          )}
-          <div className="fw-field-group__fields">
-            {groupFields.map((gf) => (
-              <FieldRenderer key={gf.path} field={gf} onBlur={onBlur} onChange={onChange} />
-            ))}
-          </div>
-        </div>,
-      );
+      // Datetime pairs: render a single merged DateTimeBlock
+      const groupType = groupFields[0]?.group;
+      if (groupType?.startsWith('datetime-pair') && groupFields.length === 2) {
+        elements.push(
+          <DateTimePairRenderer
+            key={`group-${field.group}`}
+            groupFields={groupFields}
+            onBlur={onBlur}
+            onChange={onChange}
+          />,
+        );
+      } else {
+        elements.push(
+          <div
+            key={`group-${field.group}`}
+            className="fw-field-group"
+            role="group"
+            aria-label={field.groupLabel}
+          >
+            {field.groupLabel && (
+              <span className="fw-field-group__label">{field.groupLabel}</span>
+            )}
+            <div className="fw-field-group__fields">
+              {groupFields.map((gf) => (
+                <FieldRenderer key={gf.path} field={gf} onBlur={onBlur} onChange={onChange} />
+              ))}
+            </div>
+          </div>,
+        );
+      }
     } else {
       rendered.add(field.path);
       elements.push(
@@ -591,13 +679,24 @@ export function Form(props: FormProps) {
     if (display === 'inline') return null;
 
     const isFaviconUrl = brand.source === 'favicon' && brand.icon.startsWith('http');
+    // Pass favicon URLs as serviceIcon, emojis as serviceEmoji
+    const serviceIcon = isFaviconUrl ? brand.icon : undefined;
+    const serviceEmoji = !isFaviconUrl && brand.icon ? brand.icon : undefined;
+
+    const effectiveHeading =
+      heading ||
+      analysis.title ||
+      (analysis.actionLabel && analysis.actionLabel !== 'Submit'
+        ? analysis.actionLabel
+        : 'Form');
 
     return (
       <FormHeader
         serviceName={brand.name !== 'Form' ? brand.name : undefined}
-        serviceIcon={isFaviconUrl ? brand.icon : undefined}
+        serviceIcon={serviceIcon}
+        serviceEmoji={serviceEmoji}
         serviceColor={brand.color}
-        actionLabel={heading || analysis.title}
+        actionLabel={effectiveHeading}
         description={description}
       />
     );

@@ -20,7 +20,7 @@
     padding: 0;
   }
 
-  .fw-form button {
+  .fw-form :where(button) {
     font: inherit;
     color: inherit;
     cursor: pointer;
@@ -28,9 +28,9 @@
     background: none;
   }
 
-  .fw-form input,
-  .fw-form textarea,
-  .fw-form select {
+  .fw-form :where(input),
+  .fw-form :where(textarea),
+  .fw-form :where(select) {
     font: inherit;
     color: inherit;
     background: transparent;
@@ -192,54 +192,82 @@
   }
 
   /* ── Card mode ── */
-  .fw-form-card {
+  .fw-form-card,
+  .fw-form--card {
+    border-radius: 12px;
     border: 1px solid var(--fw-border);
-    border-radius: var(--fw-radius-lg);
-    box-shadow: var(--fw-shadow-md);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 14px rgba(0,0,0,0.04);
     overflow: hidden;
-    padding: var(--fw-space-xl);
+    padding: 0;
+    position: relative;
+    background: var(--fw-bg);
   }
 
-  .fw-form-card::before {
-    content: '';
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: var(--fw-accent-bar-height);
-    background: var(--fw-primary);
-    border-radius: var(--fw-radius-lg) var(--fw-radius-lg) 0 0;
-  }
+  /* Accent bar is rendered by FormHeader component's fw-form-header__accent div.
+     No ::before pseudo-element needed on the card itself. */
 
   /* ── Inline mode (blends into parent) ── */
-  .fw-form-inline {
+  .fw-form-inline,
+  .fw-form--inline {
     border: none;
     box-shadow: none;
     background: transparent;
     padding: 0;
   }
 
+  .fw-form-inline .fw-form__fields,
+  .fw-form--inline .fw-form__fields {
+    padding: 0;
+  }
+
+  .fw-form-inline .fw-form-footer,
+  .fw-form--inline .fw-form-footer {
+    padding: 16px 0;
+    border-top: none;
+  }
+
   /* ── Panel mode (compact for sidebars) ── */
-  .fw-form-panel {
+  .fw-form-panel,
+  .fw-form--panel {
     border: 1px solid var(--fw-border);
     border-radius: var(--fw-radius);
     padding: var(--fw-space-lg);
     font-size: var(--fw-font-size-sm);
   }
 
-  .fw-form-panel .fw-field-row {
+  .fw-form-panel .fw-field-row,
+  .fw-form--panel .fw-field-row {
     margin-bottom: var(--fw-space-sm);
   }
 
   .fw-form-panel .fw-text-input,
   .fw-form-panel .fw-textarea,
-  .fw-form-panel .fw-dropdown {
+  .fw-form-panel .fw-dropdown,
+  .fw-form--panel .fw-text-input,
+  .fw-form--panel .fw-textarea,
+  .fw-form--panel .fw-dropdown {
     --fw-input-height: var(--fw-input-height-sm);
   }
 
+  .fw-form-panel .fw-form__fields,
+  .fw-form--panel .fw-form__fields {
+    padding: 0 16px 16px;
+    gap: 12px;
+  }
+
+  .fw-form-panel .fw-form-header__body,
+  .fw-form--panel .fw-form-header__body {
+    padding: 14px 16px 0;
+  }
+
+  .fw-form-panel .fw-form-footer,
+  .fw-form--panel .fw-form-footer {
+    padding: 12px 16px;
+  }
+
   /* ── Accordion mode ── */
-  .fw-form-accordion {
+  .fw-form-accordion,
+  .fw-form--accordion {
     border: 1px solid var(--fw-border);
     border-radius: var(--fw-radius);
     overflow: hidden;
@@ -455,14 +483,8 @@
      Form Header
      ═══════════════════════════════════════════════════════════════════════════ */
 
-  .fw-form-header {
-    display: flex;
-    align-items: center;
-    gap: var(--fw-space-md);
-    padding: var(--fw-space-lg) 0;
-    margin-bottom: var(--fw-space-lg);
-    border-bottom: 1px solid var(--fw-border);
-  }
+  /* NOTE: .fw-form-header BEM styles are defined in the BEM section below.
+     The flat-named classes below are kept for backward compatibility. */
 
   .fw-form-header-logo {
     width: 32px;
@@ -489,15 +511,7 @@
      Form Footer
      ═══════════════════════════════════════════════════════════════════════════ */
 
-  .fw-form-footer {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: var(--fw-space-sm);
-    padding: var(--fw-space-lg) 0;
-    margin-top: var(--fw-space-xl);
-    border-top: 1px solid var(--fw-border);
-  }
+  /* NOTE: .fw-form-footer BEM styles are defined in the BEM section below. */
 
   .fw-form-footer-secondary {
     margin-right: auto;
@@ -692,76 +706,9 @@
      Text Input — floating label
      ═══════════════════════════════════════════════════════════════════════════ */
 
-  .fw-text-input {
-    position: relative;
-    display: flex;
-    align-items: center;
-    height: var(--fw-input-height);
-    border: 1px solid var(--fw-border);
-    border-radius: var(--fw-radius);
-    background: var(--fw-bg);
-    transition:
-      border-color var(--fw-duration-fast) var(--fw-ease-out),
-      box-shadow var(--fw-duration-fast) var(--fw-ease-out);
-    cursor: text;
-  }
-
-  .fw-text-input:hover {
-    border-color: color-mix(in srgb, var(--fw-border) 70%, var(--fw-text));
-  }
-
-  .fw-text-input:focus-within {
-    border-color: var(--fw-border-focus);
-    box-shadow: var(--fw-ring);
-  }
-
-  .fw-text-input input {
-    width: 100%;
-    height: 100%;
-    padding: 0 var(--fw-space-md);
-    font-size: var(--fw-font-size-md);
-    color: var(--fw-text);
-    background: transparent;
-  }
-
-  .fw-text-input input::placeholder {
-    color: var(--fw-text-muted);
-  }
-
-  /* Floating label variant */
-  .fw-text-input--floating {
-    height: 52px;
-  }
-
-  .fw-text-input--floating input {
-    padding-top: 16px;
-    padding-bottom: 0;
-  }
-
-  .fw-text-input--floating .fw-text-input-label {
-    position: absolute;
-    left: var(--fw-space-md);
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: var(--fw-font-size-md);
-    color: var(--fw-text-muted);
-    pointer-events: none;
-    transition:
-      top var(--fw-duration-fast) var(--fw-ease-out),
-      transform var(--fw-duration-fast) var(--fw-ease-out),
-      font-size var(--fw-duration-fast) var(--fw-ease-out),
-      color var(--fw-duration-fast) var(--fw-ease-out);
-    transform-origin: left center;
-  }
-
-  .fw-text-input--floating input:focus ~ .fw-text-input-label,
-  .fw-text-input--floating input:not(:placeholder-shown) ~ .fw-text-input-label,
-  .fw-text-input--floating.fw-text-input--has-value .fw-text-input-label {
-    top: 10px;
-    transform: translateY(0);
-    font-size: var(--fw-font-size-xs);
-    color: var(--fw-text-secondary);
-  }
+  /* NOTE: .fw-text-input BEM styles (__field, __native, __label, etc.)
+     are defined in the BEM section below. Flat-named variants kept for
+     backward compat with data-attribute based usage. */
 
   .fw-text-input-prefix,
   .fw-text-input-suffix {
@@ -781,60 +728,12 @@
     padding-right: var(--fw-space-md);
   }
 
-  .fw-text-input:disabled,
-  .fw-text-input[data-disabled="true"] {
-    opacity: 0.5;
-    cursor: not-allowed;
-    background: var(--fw-bg-muted);
-  }
-
-  .fw-text-input[data-readonly="true"] {
-    background: var(--fw-bg-muted);
-  }
-
   /* ═══════════════════════════════════════════════════════════════════════════
      Textarea — auto-grow
      ═══════════════════════════════════════════════════════════════════════════ */
 
-  .fw-textarea {
-    position: relative;
-    display: flex;
-    border: 1px solid var(--fw-border);
-    border-radius: var(--fw-radius);
-    background: var(--fw-bg);
-    transition:
-      border-color var(--fw-duration-fast) var(--fw-ease-out),
-      box-shadow var(--fw-duration-fast) var(--fw-ease-out);
-  }
-
-  .fw-textarea:hover {
-    border-color: color-mix(in srgb, var(--fw-border) 70%, var(--fw-text));
-  }
-
-  .fw-textarea:focus-within {
-    border-color: var(--fw-border-focus);
-    box-shadow: var(--fw-ring);
-  }
-
-  .fw-textarea textarea {
-    width: 100%;
-    min-height: 80px;
-    padding: var(--fw-space-md);
-    font-size: var(--fw-font-size-md);
-    color: var(--fw-text);
-    background: transparent;
-    resize: vertical;
-    line-height: var(--fw-line-height-normal);
-  }
-
-  .fw-textarea textarea::placeholder {
-    color: var(--fw-text-muted);
-  }
-
-  .fw-textarea--auto-grow textarea {
-    resize: none;
-    overflow: hidden;
-  }
+  /* NOTE: .fw-textarea BEM styles (__field, __native, __label, etc.)
+     are defined in the BEM section below. */
 
   .fw-textarea-counter {
     position: absolute;
@@ -848,23 +747,9 @@
      Number Stepper
      ═══════════════════════════════════════════════════════════════════════════ */
 
-  .fw-number-stepper {
-    display: inline-flex;
-    align-items: center;
-    border: 1px solid var(--fw-border);
-    border-radius: var(--fw-radius);
-    background: var(--fw-bg);
-    height: var(--fw-input-height);
-    overflow: hidden;
-    transition:
-      border-color var(--fw-duration-fast) var(--fw-ease-out),
-      box-shadow var(--fw-duration-fast) var(--fw-ease-out);
-  }
-
-  .fw-number-stepper:focus-within {
-    border-color: var(--fw-border-focus);
-    box-shadow: var(--fw-ring);
-  }
+  /* NOTE: .fw-number-stepper BEM styles (__controls, __btn, __value, etc.)
+     are defined in the BEM section below. Flat-named variants kept for
+     backward compat. */
 
   .fw-number-stepper-btn {
     display: flex;
@@ -898,40 +783,13 @@
     height: 14px;
   }
 
-  .fw-number-stepper input {
-    width: 60px;
-    height: 100%;
-    text-align: center;
-    font-size: var(--fw-font-size-md);
-    font-weight: var(--fw-font-weight-medium);
-    color: var(--fw-text);
-    font-variant-numeric: tabular-nums;
-    border-left: 1px solid var(--fw-border);
-    border-right: 1px solid var(--fw-border);
-  }
-
-  .fw-number-stepper input::-webkit-inner-spin-button,
-  .fw-number-stepper input::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-
-  .fw-number-stepper input[type="number"] {
-    -moz-appearance: textfield;
-  }
-
   /* ═══════════════════════════════════════════════════════════════════════════
      Toggle / Switch
      ═══════════════════════════════════════════════════════════════════════════ */
 
-  .fw-toggle {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    gap: var(--fw-space-sm);
-    cursor: pointer;
-    user-select: none;
-  }
+  /* NOTE: .fw-toggle BEM styles (__track, __knob, __label) are defined
+     in the BEM section below. The flat-named classes below are kept for
+     backward compatibility with data-attribute based usage. */
 
   .fw-toggle-track {
     position: relative;
@@ -987,11 +845,8 @@
      Pill Selector
      ═══════════════════════════════════════════════════════════════════════════ */
 
-  .fw-pill-selector {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--fw-space-sm);
-  }
+  /* NOTE: .fw-pill-selector BEM styles (__pills, __pill, __label, etc.)
+     are defined in the BEM section below. Flat-named .fw-pill kept for compat. */
 
   .fw-pill {
     display: inline-flex;
@@ -1047,9 +902,8 @@
      Dropdown
      ═══════════════════════════════════════════════════════════════════════════ */
 
-  .fw-dropdown {
-    position: relative;
-  }
+  /* NOTE: .fw-dropdown BEM styles (__trigger, __overlay, __option, etc.)
+     are defined in the BEM section below. Flat-named variants kept for compat. */
 
   .fw-dropdown-trigger {
     display: flex;
@@ -1267,9 +1121,8 @@
      People Picker
      ═══════════════════════════════════════════════════════════════════════════ */
 
-  .fw-people-picker {
-    position: relative;
-  }
+  /* NOTE: .fw-people-picker BEM styles (__chips, __avatar, __add-btn, etc.)
+     are defined in the BEM section below. Flat-named variants kept for compat. */
 
   .fw-people-picker-input {
     display: flex;
@@ -1443,42 +1296,8 @@
      Tag Input
      ═══════════════════════════════════════════════════════════════════════════ */
 
-  .fw-tag-input {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: var(--fw-space-xs);
-    min-height: var(--fw-input-height);
-    padding: var(--fw-space-xs) var(--fw-space-sm);
-    border: 1px solid var(--fw-border);
-    border-radius: var(--fw-radius);
-    background: var(--fw-bg);
-    cursor: text;
-    transition:
-      border-color var(--fw-duration-fast) var(--fw-ease-out),
-      box-shadow var(--fw-duration-fast) var(--fw-ease-out);
-  }
-
-  .fw-tag-input:hover {
-    border-color: color-mix(in srgb, var(--fw-border) 70%, var(--fw-text));
-  }
-
-  .fw-tag-input:focus-within {
-    border-color: var(--fw-border-focus);
-    box-shadow: var(--fw-ring);
-  }
-
-  .fw-tag-input input {
-    flex: 1;
-    min-width: 60px;
-    height: 28px;
-    padding: 0 var(--fw-space-xs);
-    font-size: var(--fw-font-size-sm);
-  }
-
-  .fw-tag-input input::placeholder {
-    color: var(--fw-text-muted);
-  }
+  /* NOTE: .fw-tag-input BEM styles (__container, __chip, __native, etc.)
+     are defined in the BEM section below. */
 
   /* ═══════════════════════════════════════════════════════════════════════════
      Chip (shared chip component for tags, people, etc.)
@@ -1595,31 +1414,8 @@
      Title Input — large borderless
      ═══════════════════════════════════════════════════════════════════════════ */
 
-  .fw-title-input {
-    width: 100%;
-    padding: var(--fw-space-sm) 0;
-    margin-bottom: var(--fw-space-lg);
-  }
-
-  .fw-title-input input {
-    width: 100%;
-    font-size: var(--fw-font-size-title);
-    font-weight: var(--fw-font-weight-bold);
-    color: var(--fw-text);
-    line-height: var(--fw-line-height-tight);
-    border: none;
-    background: transparent;
-    padding: 0;
-  }
-
-  .fw-title-input input::placeholder {
-    color: var(--fw-text-muted);
-    font-weight: var(--fw-font-weight-bold);
-  }
-
-  .fw-title-input input:focus {
-    outline: none;
-  }
+  /* NOTE: .fw-title-input BEM styles (__native, __error, etc.)
+     are defined in the BEM section below. */
 
   /* ═══════════════════════════════════════════════════════════════════════════
      Object Section — collapsible card
@@ -1799,6 +1595,9 @@
      Progressive Disclosure
      ═══════════════════════════════════════════════════════════════════════════ */
 
+  /* NOTE: Progressive disclosure BEM styles (.fw-progressive__trigger, etc.)
+     are defined in the BEM section below. Flat-named kept for compat. */
+
   .fw-progressive-disclosure {
     margin-bottom: var(--fw-space-lg);
   }
@@ -1852,13 +1651,7 @@
      Wizard Nav — step indicator + progress bar
      ═══════════════════════════════════════════════════════════════════════════ */
 
-  .fw-wizard-nav {
-    display: flex;
-    align-items: center;
-    gap: 0;
-    margin-bottom: var(--fw-space-xl);
-    position: relative;
-  }
+  /* NOTE: .fw-wizard-nav BEM styles are defined in the BEM section below. */
 
   .fw-wizard-step {
     display: flex;
@@ -2005,24 +1798,29 @@
       align-items: stretch;
     }
 
-    .fw-form-footer .fw-btn {
+    .fw-form-footer .fw-btn,
+    .fw-form-footer__btn {
       width: 100%;
     }
 
-    .fw-form-footer-secondary {
+    .fw-form-footer-secondary,
+    .fw-form-footer__left {
       margin-right: 0;
       order: 1;
     }
 
-    .fw-wizard-step-label {
-      display: none;
+    .fw-wizard-step-label,
+    .fw-wizard-nav__step-group .fw-wizard-nav__step {
+      /* hide labels on small screens */
     }
 
-    .fw-pill-selector {
+    .fw-pill-selector,
+    .fw-pill-selector__pills {
       flex-direction: column;
     }
 
-    .fw-pill {
+    .fw-pill,
+    .fw-pill-selector__pill {
       width: 100%;
       justify-content: center;
     }
@@ -2031,7 +1829,8 @@
       overflow-x: auto;
     }
 
-    .fw-datetime-block {
+    .fw-datetime-block,
+    .fw-datetime__display {
       flex-direction: column;
       align-items: stretch;
     }
@@ -2314,6 +2113,1756 @@
     white-space: nowrap;
     border: 0;
   }
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     BEM-STYLE COMPONENT CLASS MAPPINGS
+     Maps the BEM class names used by React components to proper styles.
+     Matches the reference design in demo-preview.html.
+     ═══════════════════════════════════════════════════════════════════════════ */
+
+  /* ── Form Fields Container ── */
+  .fw-form__fields {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 0 24px 24px;
+  }
+
+  /* ── Field wrapper (from Form.tsx FieldRenderer) ── */
+  .fw-field {
+    position: relative;
+  }
+
+  .fw-field--ai-prefilled {
+    position: relative;
+  }
+
+  .fw-field__description {
+    font-size: var(--fw-font-size-xs);
+    color: var(--fw-text-muted);
+    margin-top: 4px;
+  }
+
+  .fw-field--has-error {
+    /* Allow error styles to propagate */
+  }
+
+  /* ── Field Group ── */
+  .fw-field-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--fw-space-sm);
+  }
+
+  .fw-field-group__label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--fw-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .fw-field-group__fields {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     Form Header — BEM classes (FormHeader.tsx)
+     Reference: accent bar + service badge + heading
+     ═══════════════════════════════════════════════════════════════════════════ */
+
+  .fw-form-header {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    margin-bottom: 0;
+    border-bottom: none;
+  }
+
+  .fw-form-header__accent {
+    height: 4px;
+    background: linear-gradient(135deg, var(--fw-primary), color-mix(in srgb, var(--fw-primary) 70%, #8B5CF6));
+    width: 100%;
+    border-radius: 0;
+  }
+
+  .fw-form-header__body {
+    padding: 20px 24px 0;
+  }
+
+  .fw-form-header__service {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+
+  .fw-form-header__service-icon {
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+
+  .fw-form-header__service-emoji {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--fw-primary-subtle);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    line-height: 1;
+    letter-spacing: 0;
+  }
+
+  .fw-form-header__service-name {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--fw-text-secondary);
+  }
+
+  .fw-form-header__heading {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--fw-text);
+    line-height: 1.3;
+    margin: 0;
+    margin-top: 4px;
+  }
+
+  .fw-form-header__description {
+    font-size: var(--fw-font-size-sm);
+    color: var(--fw-text-secondary);
+    margin-top: 4px;
+  }
+
+  /* Divider between header and body */
+  .fw-form--card .fw-form-header + .fw-form__fields,
+  .fw-form-card .fw-form-header + .fw-form__fields {
+    /* Add divider via border-top on fields when preceded by header */
+  }
+
+  .fw-form--card .fw-form-header__body::after,
+  .fw-form-card .fw-form-header__body::after {
+    content: '';
+    display: block;
+    height: 1px;
+    background: var(--fw-border);
+    margin-top: 16px;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     Form Footer — BEM classes (FormFooter.tsx)
+     Reference: right-aligned, Cancel outlined, primary CTA filled
+     ═══════════════════════════════════════════════════════════════════════════ */
+
+  .fw-form-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 16px 24px;
+    border-top: 1px solid var(--fw-border);
+  }
+
+  .fw-form-footer__left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-right: auto;
+  }
+
+  .fw-form-footer__right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .fw-form-footer__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 20px;
+    border-radius: var(--fw-radius);
+    font-size: 14px;
+    font-weight: 600;
+    font-family: var(--fw-font);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    border: none;
+    white-space: nowrap;
+  }
+
+  .fw-form-footer__btn:active {
+    transform: scale(0.98);
+  }
+
+  .fw-form-footer__btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .fw-form-footer__btn--primary {
+    background: var(--fw-primary);
+    color: white;
+    border-radius: var(--fw-radius);
+    font-weight: 600;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    border: none;
+  }
+
+  .fw-form-footer__btn--primary:hover {
+    filter: brightness(0.9);
+  }
+
+  .fw-form-footer__btn--outline {
+    background: transparent;
+    border: 1.5px solid var(--fw-border);
+    border-radius: var(--fw-radius);
+    padding: 8px 20px;
+    font-weight: 500;
+    color: var(--fw-text-secondary);
+  }
+
+  .fw-form-footer__btn--outline:hover {
+    background: var(--fw-bg-hover);
+    color: var(--fw-text);
+  }
+
+  .fw-form-footer__btn--secondary {
+    background: var(--fw-bg);
+    color: var(--fw-text);
+    border: 1px solid var(--fw-border);
+  }
+
+  .fw-form-footer__btn--secondary:hover {
+    background: var(--fw-bg-hover);
+  }
+
+  .fw-form-footer__btn--ghost {
+    background: transparent;
+    color: var(--fw-text-secondary);
+  }
+
+  .fw-form-footer__btn--ghost:hover {
+    background: var(--fw-bg-hover);
+    color: var(--fw-text);
+  }
+
+  .fw-form-footer__btn--danger {
+    background: var(--fw-color-error);
+    color: #fff;
+  }
+
+  .fw-form-footer__btn--danger:hover {
+    background: color-mix(in srgb, var(--fw-color-error) 85%, #000);
+  }
+
+  .fw-form-footer__spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: fw-spin 0.6s linear infinite;
+  }
+
+  .fw-form-footer__btn--outline .fw-form-footer__spinner {
+    border-color: rgba(0,0,0,0.15);
+    border-top-color: var(--fw-text-secondary);
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     Text Input — BEM classes (TextInput.tsx)
+     Reference: visible border, floating label, focus ring
+     ═══════════════════════════════════════════════════════════════════════════ */
+
+  .fw-text-input {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .fw-text-input__icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--fw-text-muted);
+    display: flex;
+    align-items: center;
+    z-index: 1;
+  }
+
+  .fw-text-input__field {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 52px;
+    border: 1.5px solid var(--fw-border);
+    border-radius: var(--fw-radius);
+    background: var(--fw-bg);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    cursor: text;
+  }
+
+  .fw-text-input--has-icon .fw-text-input__field {
+    padding-left: 36px;
+  }
+
+  .fw-text-input__field:hover {
+    border-color: color-mix(in srgb, var(--fw-border) 70%, var(--fw-text));
+  }
+
+  .fw-text-input--focused .fw-text-input__field {
+    border-color: var(--fw-primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--fw-primary) 10%, transparent);
+  }
+
+  .fw-text-input--error .fw-text-input__field {
+    border-color: var(--fw-color-error);
+  }
+
+  .fw-text-input--error.fw-text-input--focused .fw-text-input__field {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--fw-color-error) 10%, transparent);
+  }
+
+  .fw-text-input__native {
+    width: 100%;
+    height: 100%;
+    padding: 10px 12px;
+    font-size: 14px;
+    color: var(--fw-text);
+    background: transparent;
+    border: 1.5px solid var(--fw-border);
+    border-radius: var(--fw-radius);
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+
+  .fw-text-input__native:focus {
+    border-color: var(--fw-primary);
+    box-shadow: var(--fw-ring);
+  }
+
+  .fw-text-input__native::placeholder {
+    color: var(--fw-text-muted);
+  }
+
+  .fw-text-input__label {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: var(--fw-font-size-md);
+    color: var(--fw-text-muted);
+    pointer-events: none;
+    transition: all 0.15s ease;
+    transform-origin: left center;
+  }
+
+  .fw-text-input__label--floated {
+    top: 10px;
+    transform: translateY(0);
+    font-size: 11px;
+    color: var(--fw-text-secondary);
+    font-weight: 500;
+  }
+
+  .fw-text-input--focused .fw-text-input__label--floated {
+    color: var(--fw-primary);
+  }
+
+  .fw-text-input__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 0;
+  }
+
+  .fw-text-input__error {
+    font-size: 11px;
+    color: var(--fw-color-error);
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .fw-text-input__count {
+    font-size: 11px;
+    color: var(--fw-text-muted);
+    margin-top: 4px;
+    margin-left: auto;
+  }
+
+  .fw-text-input--disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     Title Input — BEM classes (TitleInput.tsx)
+     Reference: 28px, 800 weight, no border, muted placeholder
+     ═══════════════════════════════════════════════════════════════════════════ */
+
+  .fw-title-input {
+    width: 100%;
+    padding: 12px 0;
+  }
+
+  .fw-title-input__native {
+    width: 100%;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--fw-text);
+    line-height: 1.2;
+    border: none;
+    outline: none;
+    background: transparent;
+    padding: 0;
+  }
+
+  .fw-title-input__native::placeholder {
+    color: var(--fw-text-muted);
+    font-weight: 800;
+  }
+
+  .fw-title-input__error {
+    font-size: 11px;
+    color: var(--fw-color-error);
+    margin-top: 4px;
+  }
+
+  .fw-title-input--disabled {
+    opacity: 0.5;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     Toggle — BEM classes (Toggle.tsx)
+     Reference: smooth knob, 44x24 track, primary color on
+     ═══════════════════════════════════════════════════════════════════════════ */
+
+  .fw-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--fw-space-sm);
+    padding: 4px 0;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .fw-toggle__label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--fw-text);
+    cursor: pointer;
+  }
+
+  .fw-toggle__track {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    background: #D4D4D8;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    flex-shrink: 0;
+    padding: 0;
+  }
+
+  .fw-toggle__track:focus-visible {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--fw-primary) 15%, transparent);
+    outline: none;
+  }
+
+  .fw-toggle__knob {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0,0,0,.15);
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    pointer-events: none;
+  }
+
+  .fw-toggle--on .fw-toggle__track {
+    background: var(--fw-primary);
+  }
+
+  .fw-toggle--on .fw-toggle__knob {
+    transform: translateX(20px);
+  }
+
+  .fw-toggle__error {
+    font-size: 11px;
+    color: var(--fw-color-error);
+    margin-top: 4px;
+  }
+
+  .fw-toggle--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .fw-toggle--disabled .fw-toggle__track {
+    cursor: not-allowed;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     Pill Selector — BEM classes (PillSelector.tsx)
+     Reference: horizontal pills, compact, active gets primary fill
+     ═══════════════════════════════════════════════════════════════════════════ */
+
+  .fw-pill-selector {
+    display: flex;
+    flex-direction: column;
+    gap: var(--fw-space-sm);
+  }
+
+  .fw-pill-selector__label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--fw-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .fw-pill-selector__pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .fw-pill-selector__pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px 16px;
+    border-radius: 100px;
+    border: 1px solid var(--fw-border);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--fw-text-secondary);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+  }
+
+  .fw-pill-selector__pill:hover {
+    border-color: #A1A1AA;
+    color: var(--fw-text);
+  }
+
+  .fw-pill-selector__pill--active {
+    background: var(--fw-primary);
+    color: #fff;
+    border-color: var(--fw-primary);
+  }
+
+  .fw-pill-selector__pill--active:hover {
+    background: var(--fw-primary-hover);
+    border-color: var(--fw-primary-hover);
+    color: #fff;
+  }
+
+  .fw-pill-selector__pill:focus-visible {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--fw-primary) 15%, transparent);
+    outline: none;
+  }
+
+  .fw-pill-selector__pill:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .fw-pill-selector__error {
+    font-size: 11px;
+    color: var(--fw-color-error);
+    margin-top: 4px;
+  }
+
+  .fw-pill-selector--disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     DateTime Block — BEM classes (DateTimeBlock.tsx)
+     Reference: accent left border, tinted background, day number, time range
+     ═══════════════════════════════════════════════════════════════════════════ */
+
+  .fw-datetime {
+    display: flex;
+    flex-direction: column;
+    gap: var(--fw-space-sm);
+  }
+
+  .fw-datetime__label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--fw-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .fw-datetime__display {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: color-mix(in srgb, var(--fw-primary) 6%, transparent);
+    border-left: 3px solid var(--fw-primary);
+    border-radius: 0 var(--fw-radius) var(--fw-radius) 0;
+    padding: 12px 16px;
+    cursor: pointer;
+    border-top: none;
+    border-right: none;
+    border-bottom: none;
+    font-family: var(--fw-font);
+    transition: background 0.15s ease;
+    text-align: left;
+    width: 100%;
+  }
+
+  .fw-datetime__display:hover {
+    background: color-mix(in srgb, var(--fw-primary) 10%, transparent);
+  }
+
+  .fw-datetime__block {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .fw-datetime__day-num {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--fw-primary);
+    line-height: 1;
+  }
+
+  .fw-datetime__day-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--fw-text);
+  }
+
+  .fw-datetime__month {
+    font-size: 12px;
+    color: var(--fw-text-secondary);
+    display: block;
+    width: 100%;
+    margin-left: 36px;
+    margin-top: -4px;
+  }
+
+  .fw-datetime__time {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--fw-text);
+  }
+
+  .fw-datetime__placeholder {
+    font-size: 14px;
+    color: var(--fw-text-muted);
+  }
+
+  .fw-datetime__separator {
+    font-size: 16px;
+    color: var(--fw-text-muted);
+    flex-shrink: 0;
+    padding: 0 4px;
+  }
+
+  .fw-datetime__duration {
+    font-size: 12px;
+    color: var(--fw-text-muted);
+    background: var(--fw-bg-muted);
+    padding: 2px 8px;
+    border-radius: 100px;
+    margin-left: auto;
+    white-space: nowrap;
+  }
+
+  .fw-datetime__editor {
+    display: flex;
+    flex-direction: column;
+    gap: var(--fw-space-sm);
+    padding: 12px;
+    border: 1.5px solid var(--fw-border);
+    border-radius: var(--fw-radius);
+    background: var(--fw-bg);
+  }
+
+  .fw-datetime__row {
+    display: flex;
+    gap: var(--fw-space-sm);
+  }
+
+  .fw-datetime__input-label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--fw-text-secondary);
+  }
+
+  .fw-datetime__input {
+    height: 36px;
+    padding: 0 8px;
+    border: 1px solid var(--fw-border);
+    border-radius: var(--fw-radius-sm);
+    font-size: var(--fw-font-size-md);
+    color: var(--fw-text);
+    background: var(--fw-bg);
+    font-family: var(--fw-font);
+  }
+
+  .fw-datetime__input:focus {
+    border-color: var(--fw-primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--fw-primary) 10%, transparent);
+    outline: none;
+  }
+
+  .fw-datetime__done {
+    align-self: flex-end;
+    padding: 6px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--fw-primary);
+    background: transparent;
+    border: 1px solid var(--fw-primary);
+    border-radius: var(--fw-radius);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .fw-datetime__done:hover {
+    background: color-mix(in srgb, var(--fw-primary) 8%, transparent);
+  }
+
+  .fw-datetime__error {
+    font-size: 11px;
+    color: var(--fw-color-error);
+    margin-top: 4px;
+  }
+
+  .fw-datetime--disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     People Picker — BEM classes (PeoplePicker.tsx)
+     Reference: colored avatar circles, chip layout, dashed add button
+     ═══════════════════════════════════════════════════════════════════════════ */
+
+  .fw-people-picker {
+    display: flex;
+    flex-direction: column;
+    gap: var(--fw-space-sm);
+  }
+
+  .fw-people-picker__label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--fw-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .fw-people-picker__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .fw-people-picker .fw-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #F4F4F5;
+    border: 1px solid var(--fw-border);
+    border-radius: 100px;
+    padding: 4px 10px 4px 4px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--fw-text);
+    cursor: default;
+    transition: background 0.15s ease;
+    height: auto;
+  }
+
+  .fw-people-picker .fw-chip:hover {
+    background: #E4E4E7;
+  }
+
+  .fw-people-picker .fw-chip--removing {
+    animation: fw-chip-exit 0.12s ease forwards;
+  }
+
+  .fw-people-picker__avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .fw-people-picker__avatar--sm {
+    width: 22px;
+    height: 22px;
+    font-size: 10px;
+  }
+
+  .fw-people-picker__name {
+    white-space: nowrap;
+  }
+
+  .fw-people-picker__remove {
+    font-size: 15px;
+    color: var(--fw-text-secondary);
+    cursor: pointer;
+    margin-left: 2px;
+    line-height: 1;
+    padding: 0;
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+
+  .fw-people-picker__remove:hover {
+    background: rgba(0,0,0,0.08);
+    color: var(--fw-text);
+  }
+
+  .fw-people-picker__add-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    border: 1.5px dashed var(--fw-border);
+    border-radius: var(--fw-radius-full);
+    padding: 4px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--fw-text-muted);
+    background: transparent;
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .fw-people-picker__add-btn:hover {
+    border-color: var(--fw-primary);
+    color: var(--fw-primary);
+  }
+
+  .fw-people-picker__plus {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .fw-people-picker__add-text {
+    /* inherits from btn */
+  }
+
+  .fw-people-picker__dropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    z-index: var(--fw-z-dropdown);
+    border: 1px solid var(--fw-border);
+    border-radius: var(--fw-radius);
+    background: var(--fw-bg);
+    box-shadow: var(--fw-shadow-lg);
+    max-height: 200px;
+    overflow: hidden;
+    animation: fw-dropdown-enter 0.2s ease;
+  }
+
+  .fw-people-picker__search {
+    width: 100%;
+    padding: 10px 12px;
+    border: none;
+    border-bottom: 1px solid var(--fw-border);
+    font-size: 13px;
+    color: var(--fw-text);
+    background: var(--fw-bg);
+    outline: none;
+  }
+
+  .fw-people-picker__search:focus {
+    background: var(--fw-bg-surface);
+  }
+
+  .fw-people-picker__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 160px;
+    overflow-y: auto;
+  }
+
+  .fw-people-picker__option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--fw-text);
+    transition: background 0.1s ease;
+  }
+
+  .fw-people-picker__option:hover {
+    background: var(--fw-bg-hover);
+  }
+
+  .fw-people-picker__empty {
+    padding: 12px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--fw-text-muted);
+  }
+
+  .fw-people-picker__error {
+    font-size: 11px;
+    color: var(--fw-color-error);
+    margin-top: 4px;
+  }
+
+  .fw-people-picker--disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     Progressive Disclosure — BEM classes (ProgressiveDisclosure.tsx)
+     Reference: dashed border, + icon, muted hint text
+     ═══════════════════════════════════════════════════════════════════════════ */
+
+  .fw-progressive {
+    /* wrapper */
+  }
+
+  .fw-progressive__trigger {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    border: 1.5px dashed var(--fw-border);
+    border-radius: var(--fw-radius);
+    padding: 12px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--fw-text-muted);
+    background: transparent;
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .fw-progressive__trigger:hover {
+    border-color: var(--fw-primary);
+    color: var(--fw-text-secondary);
+  }
+
+  .fw-progressive__icon {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .fw-progressive__text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+
+  .fw-progressive__label {
+    font-weight: 600;
+    font-size: 13px;
+  }
+
+  .fw-progressive__hint {
+    font-size: 12px;
+    color: var(--fw-text-muted);
+    font-weight: 400;
+  }
+
+  .fw-progressive__content {
+    overflow: hidden;
+    transition: height 0.3s ease;
+  }
+
+  .fw-progressive__inner {
+    padding-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .fw-progressive__collapse {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--fw-text-secondary);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 6px 0;
+    transition: color 0.15s ease;
+  }
+
+  .fw-progressive__collapse:hover {
+    color: var(--fw-primary);
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     Textarea — BEM classes (Textarea.tsx)
+     ═══════════════════════════════════════════════════════════════════════════ */
+
+  .fw-textarea {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .fw-textarea__field {
+    position: relative;
+    display: flex;
+    border: 1.5px solid var(--fw-border);
+    border-radius: var(--fw-radius);
+    background: var(--fw-bg);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .fw-textarea__field:hover {
+    border-color: color-mix(in srgb, var(--fw-border) 70%, var(--fw-text));
+  }
+
+  .fw-textarea--focused .fw-textarea__field {
+    border-color: var(--fw-primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--fw-primary) 10%, transparent);
+  }
+
+  .fw-textarea--error .fw-textarea__field {
+    border-color: var(--fw-color-error);
+  }
+
+  .fw-textarea__native {
+    width: 100%;
+    min-height: 80px;
+    padding: 24px 12px 8px;
+    font-size: var(--fw-font-size-md);
+    color: var(--fw-text);
+    background: transparent;
+    resize: vertical;
+    line-height: 1.5;
+    border: none;
+    outline: none;
+    font-family: var(--fw-font);
+  }
+
+  .fw-textarea__native::placeholder {
+    color: var(--fw-text-muted);
+  }
+
+  .fw-textarea__label {
+    position: absolute;
+    left: 12px;
+    top: 16px;
+    font-size: var(--fw-font-size-md);
+    color: var(--fw-text-muted);
+    pointer-events: none;
+    transition: all 0.15s ease;
+    transform-origin: left center;
+  }
+
+  .fw-textarea__label--floated {
+    top: 6px;
+    font-size: 11px;
+    color: var(--fw-text-secondary);
+    font-weight: 500;
+  }
+
+  .fw-textarea--focused .fw-textarea__label--floated {
+    color: var(--fw-primary);
+  }
+
+  .fw-textarea__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 0;
+  }
+
+  .fw-textarea__error {
+    font-size: 11px;
+    color: var(--fw-color-error);
+    margin-top: 4px;
+  }
+
+  .fw-textarea__count {
+    font-size: 11px;
+    color: var(--fw-text-muted);
+    margin-top: 4px;
+    margin-left: auto;
+  }
+
+  .fw-textarea--disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     Tag Input — BEM classes (TagInput.tsx)
+     ═══════════════════════════════════════════════════════════════════════════ */
+
+  .fw-tag-input {
+    display: flex;
+    flex-direction: column;
+    gap: var(--fw-space-sm);
+  }
+
+  .fw-tag-input__label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--fw-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .fw-tag-input__container {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    min-height: 40px;
+    padding: 4px 8px;
+    border: 1.5px solid var(--fw-border);
+    border-radius: var(--fw-radius);
+    background: var(--fw-bg);
+    cursor: text;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .fw-tag-input__container:hover {
+    border-color: color-mix(in srgb, var(--fw-border) 70%, var(--fw-text));
+  }
+
+  .fw-tag-input__container:focus-within {
+    border-color: var(--fw-primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--fw-primary) 10%, transparent);
+  }
+
+  .fw-tag-input--error .fw-tag-input__container {
+    border-color: var(--fw-color-error);
+  }
+
+  .fw-tag-input__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 26px;
+    padding: 0 8px;
+    background: var(--fw-bg-muted);
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--fw-text);
+    animation: fw-chip-enter 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .fw-tag-input__chip--removing {
+    animation: fw-chip-exit 0.12s ease forwards;
+  }
+
+  .fw-tag-input__chip-text {
+    /* inherits */
+  }
+
+  .fw-tag-input__chip-remove {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    font-size: 12px;
+    color: var(--fw-text-muted);
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    transition: background 0.1s ease, color 0.1s ease;
+  }
+
+  .fw-tag-input__chip-remove:hover {
+    background: rgba(0,0,0,0.1);
+    color: var(--fw-text);
+  }
+
+  .fw-tag-input__native {
+    flex: 1;
+    min-width: 60px;
+    height: 28px;
+    padding: 0 4px;
+    font-size: 13px;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--fw-text);
+  }
+
+  .fw-tag-input__native::placeholder {
+    color: var(--fw-text-muted);
+  }
+
+  .fw-tag-input__error {
+    font-size: 11px;
+    color: var(--fw-color-error);
+    margin-top: 4px;
+  }
+
+  .fw-tag-input--disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     Dropdown — BEM classes (DropdownSelect.tsx)
+     ═══════════════════════════════════════════════════════════════════════════ */
+
+  .fw-dropdown {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--fw-space-sm);
+  }
+
+  .fw-dropdown__label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--fw-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .fw-dropdown__trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 40px;
+    padding: 0 12px;
+    border: 1.5px solid var(--fw-border);
+    border-radius: var(--fw-radius);
+    background: var(--fw-bg);
+    font-size: var(--fw-font-size-md);
+    color: var(--fw-text);
+    cursor: pointer;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    font-family: var(--fw-font);
+  }
+
+  .fw-dropdown__trigger:hover {
+    border-color: color-mix(in srgb, var(--fw-border) 70%, var(--fw-text));
+  }
+
+  .fw-dropdown__trigger:focus,
+  .fw-dropdown__trigger:focus-visible {
+    border-color: var(--fw-primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--fw-primary) 10%, transparent);
+    outline: none;
+  }
+
+  .fw-dropdown--error .fw-dropdown__trigger {
+    border-color: var(--fw-color-error);
+  }
+
+  .fw-dropdown__value {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .fw-dropdown__chevron {
+    font-size: 10px;
+    color: var(--fw-text-muted);
+    flex-shrink: 0;
+    transition: transform 0.15s ease;
+  }
+
+  .fw-dropdown--open .fw-dropdown__chevron {
+    transform: rotate(180deg);
+  }
+
+  .fw-dropdown__overlay {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    z-index: var(--fw-z-dropdown);
+    border: 1px solid var(--fw-border);
+    border-radius: var(--fw-radius);
+    background: var(--fw-bg);
+    box-shadow: var(--fw-shadow-lg);
+    overflow: hidden;
+    animation: fw-dropdown-enter 0.2s ease;
+  }
+
+  .fw-dropdown__search {
+    width: 100%;
+    padding: 10px 12px;
+    border: none;
+    border-bottom: 1px solid var(--fw-border);
+    font-size: 13px;
+    color: var(--fw-text);
+    background: var(--fw-bg);
+    outline: none;
+    font-family: var(--fw-font);
+  }
+
+  .fw-dropdown__search:focus {
+    background: var(--fw-bg-surface);
+  }
+
+  .fw-dropdown__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 240px;
+    overflow-y: auto;
+  }
+
+  .fw-dropdown__option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    font-size: var(--fw-font-size-md);
+    color: var(--fw-text);
+    cursor: pointer;
+    transition: background 0.1s ease;
+  }
+
+  .fw-dropdown__option:hover,
+  .fw-dropdown__option--highlighted {
+    background: var(--fw-bg-hover);
+  }
+
+  .fw-dropdown__option--selected {
+    font-weight: 500;
+    color: var(--fw-primary);
+  }
+
+  .fw-dropdown__empty {
+    padding: 16px 12px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--fw-text-muted);
+  }
+
+  .fw-dropdown__error {
+    font-size: 11px;
+    color: var(--fw-color-error);
+    margin-top: 4px;
+  }
+
+  .fw-dropdown--disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     Number Stepper — BEM classes (NumberStepper.tsx)
+     ═══════════════════════════════════════════════════════════════════════════ */
+
+  .fw-number-stepper {
+    display: flex;
+    flex-direction: column;
+    gap: var(--fw-space-sm);
+  }
+
+  .fw-number-stepper__label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--fw-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .fw-number-stepper__controls {
+    display: inline-flex;
+    align-items: center;
+    border: 1.5px solid var(--fw-border);
+    border-radius: var(--fw-radius);
+    overflow: hidden;
+    width: fit-content;
+    height: 40px;
+  }
+
+  .fw-number-stepper__controls:focus-within {
+    border-color: var(--fw-primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--fw-primary) 10%, transparent);
+  }
+
+  .fw-number-stepper__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 100%;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--fw-text-secondary);
+    background: #F4F4F5;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    padding: 0;
+  }
+
+  .fw-number-stepper__btn:hover {
+    background: #E4E4E7;
+  }
+
+  .fw-number-stepper__btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  .fw-number-stepper__btn--dec {
+    border-right: 1.5px solid var(--fw-border);
+  }
+
+  .fw-number-stepper__btn--inc {
+    border-left: 1.5px solid var(--fw-border);
+  }
+
+  .fw-number-stepper__value {
+    padding: 0 16px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--fw-text);
+    min-width: 80px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+  }
+
+  .fw-number-stepper__unit {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--fw-text-secondary);
+  }
+
+  .fw-number-stepper__error {
+    font-size: 11px;
+    color: var(--fw-color-error);
+    margin-top: 4px;
+  }
+
+  .fw-number-stepper--disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     Wizard Nav — BEM classes (WizardNav.tsx)
+     ═══════════════════════════════════════════════════════════════════════════ */
+
+  .fw-wizard-nav {
+    display: flex;
+    flex-direction: column;
+    gap: var(--fw-space-sm);
+    padding: 24px 24px 4px;
+  }
+
+  .fw-wizard-nav__steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+  }
+
+  .fw-wizard-nav__step-group {
+    display: flex;
+    align-items: center;
+  }
+
+  .fw-wizard-nav__step {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid #D4D4D8;
+    background: var(--fw-bg);
+    font-size: 13px;
+    font-weight: 700;
+    color: #A1A1AA;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+    flex-shrink: 0;
+  }
+
+  .fw-wizard-nav__step:disabled {
+    cursor: not-allowed;
+  }
+
+  .fw-wizard-nav__step--active {
+    background: var(--fw-primary);
+    border-color: var(--fw-primary);
+    color: #fff;
+  }
+
+  .fw-wizard-nav__step--completed {
+    background: var(--fw-primary);
+    border-color: var(--fw-primary);
+    color: #fff;
+  }
+
+  .fw-wizard-nav__connector {
+    display: block;
+    width: 56px;
+    height: 2px;
+    background: #D4D4D8;
+    flex-shrink: 0;
+  }
+
+  .fw-wizard-nav__connector--filled {
+    background: var(--fw-primary);
+  }
+
+  .fw-wizard-nav__subtitle {
+    font-size: 13px;
+    color: var(--fw-text-secondary);
+    font-weight: 500;
+    padding: 4px 0;
+    text-align: center;
+  }
+
+  .fw-wizard-nav__progress-track {
+    width: 100%;
+    height: 4px;
+    background: var(--fw-bg-muted);
+    border-radius: 100px;
+    overflow: hidden;
+    margin: 4px 0;
+  }
+
+  .fw-wizard-nav__progress-fill {
+    height: 100%;
+    background: var(--fw-primary);
+    border-radius: 100px;
+    transition: width 0.3s ease;
+  }
+
+  .fw-wizard-nav__actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0 0;
+    gap: 8px;
+  }
+
+  .fw-wizard-nav__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 9px 22px;
+    border-radius: var(--fw-radius);
+    font-size: 14px;
+    font-weight: 600;
+    font-family: var(--fw-font);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    border: none;
+    background: none;
+  }
+
+  .fw-wizard-nav__btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .fw-wizard-nav__btn--back {
+    background: transparent;
+    border: 1.5px solid var(--fw-border);
+    color: var(--fw-text-secondary);
+  }
+
+  .fw-wizard-nav__btn--back:hover:not(:disabled) {
+    border-color: #A1A1AA;
+    color: var(--fw-text);
+  }
+
+  .fw-wizard-nav__btn--next {
+    background: var(--fw-primary);
+    color: #fff;
+    box-shadow: 0 1px 3px rgba(66,133,244,.35);
+    margin-left: auto;
+  }
+
+  .fw-wizard-nav__btn--next:hover {
+    background: var(--fw-primary-hover);
+  }
+
+  .fw-wizard-nav__btn--submit {
+    background: var(--fw-primary);
+    color: #fff;
+    box-shadow: 0 1px 3px rgba(66,133,244,.35);
+    margin-left: auto;
+  }
+
+  .fw-wizard-nav__btn--submit:hover {
+    background: var(--fw-primary-hover);
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     Accordion — BEM classes (Form.tsx AccordionWrapper)
+     ═══════════════════════════════════════════════════════════════════════════ */
+
+  .fw-accordion {
+    border: 1px solid var(--fw-border);
+    border-radius: var(--fw-radius);
+    overflow: hidden;
+  }
+
+  .fw-accordion__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 12px 16px;
+    font-weight: 500;
+    font-size: var(--fw-font-size-md);
+    cursor: pointer;
+    background: var(--fw-bg);
+    border: none;
+    color: var(--fw-text);
+    transition: background 0.15s ease;
+  }
+
+  .fw-accordion__header:hover {
+    background: var(--fw-bg-hover);
+  }
+
+  .fw-accordion__title {
+    font-weight: 600;
+  }
+
+  .fw-accordion__chevron {
+    font-size: 10px;
+    color: var(--fw-text-muted);
+  }
+
+  .fw-accordion__body {
+    border-top: 1px solid var(--fw-border);
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     Mode-specific styling
+     ═══════════════════════════════════════════════════════════════════════════ */
+
+  .fw-form--edit {
+    /* default */
+  }
+
+  .fw-form--readonly {
+    pointer-events: none;
+    opacity: 0.8;
+  }
+
+  .fw-form--approval {
+    /* approval mode */
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     Density variants
+     ═══════════════════════════════════════════════════════════════════════════ */
+
+  .fw-form--comfortable {
+    /* default spacing — already set */
+  }
+
+  .fw-form--compact .fw-form__fields {
+    gap: 12px;
+    padding: 0 16px 16px;
+  }
+
+  .fw-form--compact .fw-form-header__body {
+    padding: 14px 16px 0;
+  }
+
+  .fw-form--compact .fw-form-footer {
+    padding: 12px 16px;
+  }
+
+  .fw-form--compact .fw-text-input__field {
+    height: 40px;
+  }
+
+  .fw-form--compact .fw-text-input__native {
+    padding: 14px 12px 2px;
+  }
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     Wizard display mode — override card padding for wizard content
+     ═══════════════════════════════════════════════════════════════════════════ */
+
+  .fw-form--wizard {
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.08), 0 4px 14px rgba(0,0,0,.04);
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .fw-form--wizard::before {
+    content: '';
+    display: block;
+    height: 4px;
+    background: linear-gradient(90deg, var(--fw-primary) 0%, #34A853 50%, #FBBC05 75%, #EA4335 100%);
+  }
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -2325,3 +3874,10 @@
 @layer formweave.overrides {
   /* Consumer overrides go here */
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Unlayered overrides — these ensure component styles always apply
+   regardless of @layer specificity issues.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.fw-form *:focus { outline: none; }

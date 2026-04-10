@@ -3,6 +3,7 @@ import { forwardRef } from 'react';
 export interface FormHeaderProps {
   serviceName?: string;
   serviceIcon?: string;
+  serviceEmoji?: string;
   serviceColor?: string;
   actionLabel?: string;
   description?: string;
@@ -16,6 +17,7 @@ export const FormHeader = forwardRef<HTMLDivElement, FormHeaderProps>(
     {
       serviceName,
       serviceIcon,
+      serviceEmoji,
       serviceColor,
       actionLabel,
       description,
@@ -34,14 +36,14 @@ export const FormHeader = forwardRef<HTMLDivElement, FormHeaderProps>(
           className="fw-form-header__accent"
           style={
             safeColor
-              ? { background: `linear-gradient(135deg, ${safeColor}, var(--fw-primary, ${safeColor}))` }
+              ? { background: safeColor }
               : undefined
           }
         />
 
         <div className="fw-form-header__body">
           {/* Service badge */}
-          {(serviceIcon || serviceName) && (
+          {(serviceIcon || serviceEmoji || serviceName) && (
             <div className="fw-form-header__service">
               {serviceIcon && (
                 <img
@@ -50,6 +52,11 @@ export const FormHeader = forwardRef<HTMLDivElement, FormHeaderProps>(
                   className="fw-form-header__service-icon"
                   aria-hidden="true"
                 />
+              )}
+              {serviceEmoji && (
+                <span className="fw-form-header__service-emoji" aria-hidden="true">
+                  {serviceEmoji}
+                </span>
               )}
               {serviceName && (
                 <span className="fw-form-header__service-name">

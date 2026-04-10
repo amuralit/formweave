@@ -1,4 +1,4 @@
-import { forwardRef, useId, useRef, useState, useCallback, useEffect } from 'react';
+import { forwardRef, useId, useRef, useCallback, useEffect } from 'react';
 import type { WidgetProps } from '@formweave/core';
 
 export const Textarea = forwardRef<HTMLTextAreaElement, WidgetProps<string>>(
@@ -17,24 +17,20 @@ export const Textarea = forwardRef<HTMLTextAreaElement, WidgetProps<string>>(
     ref,
   ) {
     const id = useId();
-    const [focused, setFocused] = useState(false);
     const innerRef = useRef<HTMLTextAreaElement>(null);
     const textareaRef = (ref as React.RefObject<HTMLTextAreaElement>) ?? innerRef;
-
     const maxLength = config.constraints.maxLength;
-    const hasValue = value != null && value !== '';
-    const floated = focused || hasValue;
 
     const autoGrow = useCallback(() => {
       const el = textareaRef.current;
       if (!el) return;
-      el.style.height = 'auto';
-      el.style.height = `${el.scrollHeight}px`;
+      requestAnimationFrame(() => {
+        el.style.height = 'auto';
+        el.style.height = `${el.scrollHeight}px`;
+      });
     }, [textareaRef]);
 
-    useEffect(() => {
-      autoGrow();
-    }, [value, autoGrow]);
+    useEffect(() => { autoGrow(); }, [value, autoGrow]);
 
     const handleChange = useCallback(
       (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -46,8 +42,6 @@ export const Textarea = forwardRef<HTMLTextAreaElement, WidgetProps<string>>(
 
     const rootCls = [
       'fw-textarea',
-      focused && 'fw-textarea--focused',
-      hasValue && 'fw-textarea--filled',
       error && 'fw-textarea--error',
       disabled && 'fw-textarea--disabled',
       className,
@@ -57,46 +51,41 @@ export const Textarea = forwardRef<HTMLTextAreaElement, WidgetProps<string>>(
 
     return (
       <div className={rootCls}>
-        <div className="fw-textarea__field">
-          <textarea
-            ref={textareaRef}
-            id={id}
-            className="fw-textarea__native"
-            value={value ?? ''}
-            onChange={handleChange}
-            onFocus={() => setFocused(true)}
-            onBlur={() => setFocused(false)}
-            disabled={disabled}
-            readOnly={readOnly}
-            autoFocus={autoFocus}
-            placeholder={floated ? placeholder : undefined}
-            maxLength={maxLength}
-            rows={2}
-            aria-invalid={!!error}
-            aria-describedby={error ? `${id}-error` : undefined}
-            aria-required={config.required}
-          />
+        <label htmlFor={id} className="fw-textarea__label">
+          {config.label}
+        </label>
 
-          <label
-            htmlFor={id}
-            className={`fw-textarea__label${floated ? ' fw-textarea__label--floated' : ''}`}
-          >
-            {config.label}
-          </label>
-        </div>
+        <textarea
+          ref={textareaRef}
+          id={id}
+          className="fw-textarea__native"
+          value={value ?? ''}
+          onChange={handleChange}
+          disabled={disabled}
+          readOnly={readOnly}
+          autoFocus={autoFocus}
+          placeholder={placeholder ?? config.label}
+          maxLength={maxLength}
+          rows={3}
+          aria-invalid={!!error}
+          aria-describedby={error ? `${id}-error` : undefined}
+          aria-required={config.required}
+        />
 
-        <div className="fw-textarea__footer">
-          {error && (
-            <span id={`${id}-error`} className="fw-textarea__error" role="alert">
-              {error}
-            </span>
-          )}
-          {maxLength != null && (
-            <span className="fw-textarea__count">
-              {(value ?? '').length}/{maxLength}
-            </span>
-          )}
-        </div>
+        {(error || maxLength != null) && (
+          <div className="fw-textarea__footer">
+            {error && (
+              <span id={`${id}-error`} className="fw-textarea__error" role="alert">
+                {error}
+              </span>
+            )}
+            {maxLength != null && (
+              <span className="fw-textarea__count">
+                {(value ?? '').length}/{maxLength}
+              </span>
+            )}
+          </div>
+        )}
       </div>
     );
   },
