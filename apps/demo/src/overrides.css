@@ -687,27 +687,40 @@
   letter-spacing: 0.06em;
   color: var(--fw-o-text-muted);
 }
-.fw-number-stepper__controls {
+.fw-number-stepper__field {
   display: inline-flex;
   align-items: center;
-  border: 1.5px solid #e0e0e0;
-  border-radius: 8px;
-  overflow: hidden;
+  padding: 5px 6px;
+  border: 1.5px solid transparent;
+  border-radius: 6px;
+  cursor: text;
   transition: all 0.15s ease;
+}
+.fw-number-stepper__field:hover { background: rgba(0,0,0,0.025); }
+.fw-number-stepper--focused .fw-number-stepper__field {
+  border-color: var(--fw-o-primary);
   background: #fff;
+  box-shadow: var(--fw-o-focus-ring);
 }
-.fw-number-stepper__controls:hover { border-color: #ccc; }
-.fw-number-stepper__btn {
-  width: 30px; height: 30px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 15px; color: #999; cursor: pointer; background: none;
-  border: none; transition: all 0.1s;
-  border-radius: 4px;
+.fw-number-stepper__display {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--fw-o-text);
+  cursor: text;
 }
-.fw-number-stepper__btn:hover { background: rgba(0,0,0,0.06); color: #555; }
-.fw-number-stepper__value {
-  padding: 0 14px; font-size: 14px; font-weight: 600;
-  color: var(--fw-o-text); min-width: 44px; text-align: center;
+.fw-number-stepper__input {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--fw-o-text);
+  border: none;
+  background: none;
+  outline: none !important;
+  width: 80px;
+  padding: 0;
+  -moz-appearance: textfield;
+}
+.fw-number-stepper__input::-webkit-inner-spin-button,
+.fw-number-stepper__input::-webkit-outer-spin-button { -webkit-appearance: none; }
   border-left: 1px solid var(--fw-o-border);
   border-right: 1px solid var(--fw-o-border);
   line-height: 34px;

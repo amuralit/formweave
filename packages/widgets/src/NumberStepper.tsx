@@ -1,27 +1,17 @@
-import { forwardRef, useId, useCallback } from 'react';
+import { forwardRef, useId, useCallback, useState, useRef } from 'react';
 import type { WidgetProps } from '@formweave/core';
 
-export interface NumberStepperProps extends WidgetProps<number> {
-  unit?: string;
-}
-
-export const NumberStepper = forwardRef<HTMLDivElement, NumberStepperProps>(
+export const NumberStepper = forwardRef<HTMLDivElement, WidgetProps<number>>(
   function NumberStepper(
-    {
-      value,
-      onChange,
-      error,
-      disabled,
-      readOnly,
-      config,
-      className,
-      unit,
-    },
+    { value, onChange, error, disabled, readOnly, config, className },
     ref,
   ) {
     const id = useId();
     const { minimum, maximum, step = 1 } = config.constraints;
     const current = value ?? minimum ?? 0;
+    const [focused, setFocused] = useState(false);
+    const [localValue, setLocalValue] = useState('');
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const clamp = useCallback(
       (n: number) => {
@@ -33,72 +23,77 @@ export const NumberStepper = forwardRef<HTMLDivElement, NumberStepperProps>(
       [minimum, maximum],
     );
 
-    const increment = useCallback(() => {
-      if (disabled || readOnly) return;
-      onChange(clamp(current + step));
-    }, [current, step, clamp, onChange, disabled, readOnly]);
+    const handleFocus = useCallback(() => {
+      setFocused(true);
+      setLocalValue(String(current));
+    }, [current]);
 
-    const decrement = useCallback(() => {
-      if (disabled || readOnly) return;
-      onChange(clamp(current - step));
-    }, [current, step, clamp, onChange, disabled, readOnly]);
+    const handleBlur = useCallback(() => {
+      setFocused(false);
+      const parsed = Number(localValue);
+      if (!isNaN(parsed)) {
+        onChange(clamp(parsed));
+      }
+    }, [localValue, clamp, onChange]);
 
-    const canDecrement = minimum == null || current - step >= minimum;
-    const canIncrement = maximum == null || current + step <= maximum;
+    const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+      if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        onChange(clamp(current + step));
+        setLocalValue(String(clamp(current + step)));
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        onChange(clamp(current - step));
+        setLocalValue(String(clamp(current - step)));
+      } else if (e.key === 'Enter') {
+        (e.target as HTMLInputElement).blur();
+      }
+    }, [current, step, clamp, onChange]);
 
-    const displayUnit =
-      unit ??
-      (config as WidgetProps<number>['config'] & { unit?: string }).description
-        ?.match(/\(([^)]+)\)/)?.[1];
+    const formatted = current.toLocaleString();
 
     const rootCls = [
       'fw-number-stepper',
+      focused && 'fw-number-stepper--focused',
       error && 'fw-number-stepper--error',
       disabled && 'fw-number-stepper--disabled',
       className,
-    ]
-      .filter(Boolean)
-      .join(' ');
+    ].filter(Boolean).join(' ');
 
     return (
-      <div ref={ref} className={rootCls} role="group" aria-labelledby={`${id}-label`}>
-        <span id={`${id}-label`} className="fw-number-stepper__label">
+      <div ref={ref} className={rootCls}>
+        <label htmlFor={id} className="fw-number-stepper__label">
           {config.label}
-        </span>
+        </label>
 
-        <div className="fw-number-stepper__controls">
-          <button
-            type="button"
-            className="fw-number-stepper__btn fw-number-stepper__btn--dec"
-            onClick={decrement}
-            disabled={disabled || readOnly || !canDecrement}
-            aria-label={`Decrease ${config.label}`}
-          >
-            &minus;
-          </button>
-
-          <span className="fw-number-stepper__value" aria-live="polite">
-            {current}
-            {displayUnit && (
-              <span className="fw-number-stepper__unit">{displayUnit}</span>
-            )}
-          </span>
-
-          <button
-            type="button"
-            className="fw-number-stepper__btn fw-number-stepper__btn--inc"
-            onClick={increment}
-            disabled={disabled || readOnly || !canIncrement}
-            aria-label={`Increase ${config.label}`}
-          >
-            +
-          </button>
+        <div className="fw-number-stepper__field" onClick={() => !focused && handleFocus()}>
+          {focused ? (
+            <input
+              ref={inputRef}
+              id={id}
+              type="number"
+              className="fw-number-stepper__input"
+              value={localValue}
+              onChange={(e) => setLocalValue(e.target.value)}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+              onKeyDown={handleKeyDown}
+              min={minimum}
+              max={maximum}
+              step={step}
+              disabled={disabled}
+              readOnly={readOnly}
+              autoFocus
+            />
+          ) : (
+            <span className="fw-number-stepper__display">
+              {formatted}
+            </span>
+          )}
         </div>
 
         {error && (
-          <span className="fw-number-stepper__error" role="alert">
-            {error}
-          </span>
+          <span className="fw-number-stepper__error" role="alert">{error}</span>
         )}
       </div>
     );

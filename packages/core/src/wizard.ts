@@ -185,12 +185,10 @@ export function computeWizard(
   groups: FieldGroup[],
   threshold: number = WIZARD_THRESHOLD
 ): { useWizard: boolean; pages?: WizardPage[] } {
-  // Count visible fields (essential + details)
-  const visibleCount = fields.filter(
-    (f) => f.tier === 'essential' || f.tier === 'details'
-  ).length;
+  // Count all fields (wizard should consider all fields, not just essential+details)
+  const totalCount = fields.length;
 
-  if (visibleCount <= threshold) {
+  if (totalCount <= threshold) {
     return { useWizard: false };
   }
 
