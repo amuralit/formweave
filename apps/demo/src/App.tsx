@@ -194,7 +194,70 @@ export function App() {
         />
       </Section>
 
-      {/* 6. Salesforce — Wizard */}
+      {/* 6. Batch Approval — 3 tools stacked as accordions */}
+      <Section label="Batch Approval — 3 Agent Actions">
+        {[
+          {
+            id: '1',
+            serverName: 'Google Calendar',
+            name: 'create_event',
+            inputSchema: {
+              type: 'object' as const,
+              required: ['summary'],
+              properties: {
+                summary: { type: 'string' },
+                start_time: { type: 'string', format: 'date-time' },
+                attendees: { type: 'array', items: { type: 'string', format: 'email' } },
+              },
+            },
+            args: { summary: 'Sprint Planning', start_time: '2026-04-11T10:00:00' },
+          },
+          {
+            id: '2',
+            serverName: 'Slack',
+            name: 'send_message',
+            inputSchema: {
+              type: 'object' as const,
+              required: ['channel', 'text'],
+              properties: {
+                channel: { type: 'string' },
+                text: { type: 'string' },
+              },
+            },
+            args: { channel: '#engineering', text: 'Sprint planning in 30 min' },
+          },
+          {
+            id: '3',
+            serverName: 'Jira',
+            name: 'create_issue',
+            inputSchema: {
+              type: 'object' as const,
+              required: ['summary'],
+              properties: {
+                summary: { type: 'string' },
+                issue_type: { type: 'string', enum: ['Bug', 'Task', 'Story'] },
+                priority: { type: 'string', enum: ['High', 'Medium', 'Low'] },
+              },
+            },
+            args: { summary: 'Update CI pipeline config', issue_type: 'Task', priority: 'Medium' },
+          },
+        ].map((tool, i) => (
+          <Form
+            key={tool.id}
+            schema={tool.inputSchema}
+            values={tool.args}
+            display="accordion"
+            accordionTitle={`${tool.serverName}: ${tool.name}`}
+            accordionDefaultOpen={i === 0}
+            mode="approval"
+            server={{ name: tool.serverName }}
+            onSubmit={(data) => console.log('Approved:', tool.id, data)}
+            onCancel={() => console.log('Rejected:', tool.id)}
+          />
+        ))}
+      </Section>
+
+      {/* 7. Salesforce — Wizard */}
       <Section label="Salesforce — Multi-Step Wizard">
         <Form
           schema={salesforceSchema}
