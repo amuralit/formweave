@@ -592,9 +592,7 @@ export function Form(props: FormProps) {
             pages={analysis.wizardPages}
             currentPage={wizardPage}
             onNavigate={setWizardPage}
-            onSubmit={handleFooterSubmit}
-            submitLabel={effectiveSubmitLabel}
-            submitDisabled={isSubmitting}
+            position="header"
           />
           <div className="fw-form__fields">
             <GroupedFieldRenderer
@@ -603,6 +601,15 @@ export function Form(props: FormProps) {
               onChange={handleFieldChange}
             />
           </div>
+          <WizardNav
+            pages={analysis.wizardPages}
+            currentPage={wizardPage}
+            onNavigate={setWizardPage}
+            onSubmit={handleFooterSubmit}
+            submitLabel={effectiveSubmitLabel}
+            submitDisabled={isSubmitting}
+            position="footer"
+          />
         </>
       );
     }

@@ -94,7 +94,7 @@ const stripeSchema = {
   type: 'object' as const,
   required: ['amount', 'currency'],
   properties: {
-    amount: { type: 'number', description: 'Amount in cents' },
+    amount: { type: 'number', description: 'Amount in dollars' },
     currency: { type: 'string', enum: ['usd', 'eur', 'gbp'] },
     description: { type: 'string' },
     customer_email: { type: 'string', format: 'email' },
@@ -184,7 +184,7 @@ export function App() {
       <Section label="Stripe — Payment Link (Panel)">
         <Form
           schema={stripeSchema}
-          values={{ currency: 'usd', amount: 4999 }}
+          values={{ currency: 'usd', amount: 49.99 }}
           server={{ name: 'Stripe' }}
           heading="Create payment link"
           display="panel"

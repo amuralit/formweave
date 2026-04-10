@@ -895,7 +895,9 @@
 .fw-wizard-nav__subtitle { text-align: center; font-size: 11px; color: #bbb; padding: 6px 0 2px; }
 .fw-wizard-nav__actions {
   display: flex; justify-content: flex-end; gap: 8px;
-  padding: 14px 24px; border-top: 1px solid rgba(0, 0, 0, 0.04);
+  padding: 14px 24px; border-top: 1px solid rgba(0, 0, 0, 0.06);
+  background: var(--fw-o-bg-surface, #FDFCFC);
+  position: sticky; bottom: 0; z-index: 10;
 }
 .fw-wizard-nav__btn {
   padding: 8px 20px; border-radius: var(--fw-o-radius-field);
