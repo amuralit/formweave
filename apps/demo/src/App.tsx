@@ -135,32 +135,35 @@ const addressTools = [
   },
 ];
 
-// Simulated address database (in production this would be Google Places API)
+// Simulated address database with structured data
 const ADDRESS_DB = [
-  '1600 Amphitheatre Pkwy, Mountain View, CA 94043',
-  '1 Apple Park Way, Cupertino, CA 95014',
-  '350 5th Ave, New York, NY 10118',
-  '1 Hacker Way, Menlo Park, CA 94025',
-  '410 Terry Ave N, Seattle, WA 98109',
-  '1455 Market St, San Francisco, CA 94103',
-  '1478 Vancouver Green, San Jose, CA 95134',
-  '2300 Traverwood Dr, Ann Arbor, MI 48105',
-  '100 Universal City Plaza, Universal City, CA 91608',
-  '233 S Wacker Dr, Chicago, IL 60606',
-  '1 Infinite Loop, Cupertino, CA 95014',
-  '1601 Willow Rd, Menlo Park, CA 94025',
+  { street: '1600 Amphitheatre Pkwy', city: 'Mountain View', state: 'CA', zip: '94043' },
+  { street: '1 Apple Park Way', city: 'Cupertino', state: 'CA', zip: '95014' },
+  { street: '350 5th Ave', city: 'New York', state: 'NY', zip: '10118' },
+  { street: '1 Hacker Way', city: 'Menlo Park', state: 'CA', zip: '94025' },
+  { street: '410 Terry Ave N', city: 'Seattle', state: 'WA', zip: '98109' },
+  { street: '1455 Market St', city: 'San Francisco', state: 'CA', zip: '94103' },
+  { street: '1478 Vancouver Green', city: 'San Jose', state: 'CA', zip: '95134' },
+  { street: '233 S Wacker Dr', city: 'Chicago', state: 'IL', zip: '60606' },
+  { street: '1 Infinite Loop', city: 'Cupertino', state: 'CA', zip: '95014' },
+  { street: '1601 Willow Rd', city: 'Menlo Park', state: 'CA', zip: '94025' },
 ];
 
-// Simulated tool call handler — filters based on query like a real API
+// Simulated tool call handler
 async function handleToolCall(toolName: string, args: Record<string, any>) {
   await new Promise(r => setTimeout(r, 150));
   const query = (args.query || '').toLowerCase();
 
   if (toolName === 'places_autocomplete') {
     return ADDRESS_DB
-      .filter(a => a.toLowerCase().includes(query))
+      .filter(a => `${a.street} ${a.city} ${a.state} ${a.zip}`.toLowerCase().includes(query))
       .slice(0, 5)
-      .map((a, i) => ({ id: String(i), name: a }));
+      .map(a => ({
+        id: a.zip,
+        name: `${a.street}, ${a.city}, ${a.state} ${a.zip}`,
+        // Structured data for auto-populating sibling fields
+        _fields: { street: a.street, city: a.city, state: a.state, zip: a.zip, country: 'US' },
+      }));
   }
   if (toolName === 'contacts_search') {
     const contacts = [

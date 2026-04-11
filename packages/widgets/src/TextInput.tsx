@@ -4,6 +4,8 @@ import type { WidgetProps } from '@formweave/core';
 export interface TextInputProps extends WidgetProps<string> {
   icon?: React.ReactNode;
   onToolCall?: (toolName: string, args: Record<string, any>) => Promise<any>;
+  /** Called when a tool suggestion contains structured fields to populate siblings */
+  onFieldsPopulate?: (fields: Record<string, any>) => void;
 }
 
 /** Map field names to HTML autocomplete tokens for browser-native autofill */
@@ -41,6 +43,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
       className,
       icon,
       onToolCall,
+      onFieldsPopulate,
     },
     ref,
   ) {
@@ -57,9 +60,17 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
     const isPhone = /^(phone|telephone|mobile|tel|cell)$/i.test(config.path);
     const inputType = config.constraints.format === 'email' ? 'email' : isPhone ? 'tel' : 'text';
 
+    const formatPhone = useCallback((raw: string): string => {
+      const digits = raw.replace(/\D/g, '').slice(0, 10);
+      if (digits.length <= 3) return digits;
+      if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+      return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+    }, []);
+
     const handleChange = useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {
-        const val = e.target.value;
+        let val = e.target.value;
+        if (isPhone) val = formatPhone(val);
         onChange(val);
 
         // Tool-aware autocomplete
@@ -83,11 +94,19 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
       [onChange, hasToolMatch, onToolCall, config.toolMatch],
     );
 
-    const selectSuggestion = useCallback((suggestion: { id: string; name: string }) => {
-      onChange(suggestion.name);
+    const selectSuggestion = useCallback((suggestion: any) => {
+      // If suggestion has structured fields, populate siblings
+      if (suggestion._fields && onFieldsPopulate) {
+        const fields = suggestion._fields as Record<string, any>;
+        // Set the current field to just the street part (not full address)
+        onChange(fields[config.path] || suggestion.name);
+        onFieldsPopulate(fields);
+      } else {
+        onChange(suggestion.name);
+      }
       setShowSuggestions(false);
       setSuggestions([]);
-    }, [onChange]);
+    }, [onChange, onFieldsPopulate, config.path]);
 
     // Cleanup debounce
     useEffect(() => () => clearTimeout(debounceRef.current), []);

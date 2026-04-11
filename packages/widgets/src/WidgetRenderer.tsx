@@ -60,6 +60,7 @@ function LoadingFallback() {
 export interface WidgetRendererProps extends WidgetProps<any> {
   children?: React.ReactNode;
   onToolCall?: (toolName: string, args: Record<string, any>) => Promise<any>;
+  onFieldsPopulate?: (fields: Record<string, any>) => void;
 }
 
 export const WidgetRenderer = forwardRef<HTMLDivElement, WidgetRendererProps>(

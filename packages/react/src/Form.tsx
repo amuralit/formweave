@@ -99,7 +99,7 @@ interface FieldRendererProps {
 
 const FieldRenderer = memo(function FieldRenderer({ field, onBlur, onChange }: FieldRendererProps) {
   const { value, error, touched, aiPrefilled, setValue } = useFormField(field.path);
-  const { mode, isBlurred, hasSubmitted, onToolCall } = useFormContext();
+  const { mode, isBlurred, hasSubmitted, onToolCall, store } = useFormContext();
 
   const isReadOnly = mode === 'readonly';
   const isDisabled = mode === 'readonly';
@@ -124,6 +124,16 @@ const FieldRenderer = memo(function FieldRenderer({ field, onBlur, onChange }: F
   const handleBlur = useCallback(() => {
     onBlur(field.path);
   }, [onBlur, field.path]);
+
+  // Populate sibling fields when a tool suggestion has structured data
+  const handleFieldsPopulate = useCallback((fields: Record<string, any>) => {
+    const state = store.getState();
+    for (const [key, val] of Object.entries(fields)) {
+      if (key !== field.path) {
+        state.setValue(key, val);
+      }
+    }
+  }, [store, field.path]);
 
   // Determine which CSS class to apply for AI-prefilled state
   const fieldCls = [
@@ -154,6 +164,7 @@ const FieldRenderer = memo(function FieldRenderer({ field, onBlur, onChange }: F
           config={field}
           placeholder={isTitleInput ? (field.description || 'Enter title...') : undefined}
           onToolCall={onToolCall}
+          onFieldsPopulate={handleFieldsPopulate}
         />
         {field.description && !displayError && !isTitleInput && (
           <p className="fw-field__description">{field.description}</p>
