@@ -364,17 +364,11 @@
 
 /* Borderless by default, subtle hover bg, focus shows border + ring */
 .fw-text-input__field {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  border: 1px solid transparent;
-  border-radius: var(--fw-o-radius-field);
-  padding: 8px 12px;
-  background: transparent;
-  transition:
-    border-color 150ms var(--fw-o-ease-out),
-    background-color 150ms var(--fw-o-ease-out),
-    box-shadow 150ms var(--fw-o-ease-out);
+  position: relative;
+  border: none !important;
+  padding: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
 }
 
 .fw-text-input__field:hover {
@@ -402,6 +396,33 @@
 .fw-text-input__native::placeholder {
   color: var(--fw-o-text-placeholder);
   font-weight: 400;
+}
+
+/* Empty inputs: show subtle bottom border so users know where to click */
+.fw-text-input__native:placeholder-shown {
+  border-bottom: 1px dashed rgba(0,0,0,0.1);
+  border-radius: 0;
+}
+.fw-text-input__native:placeholder-shown:hover {
+  border-bottom-color: rgba(0,0,0,0.2);
+}
+.fw-text-input__native:placeholder-shown:focus {
+  border: 1px solid var(--fw-o-primary);
+  border-radius: var(--fw-o-radius-field);
+}
+
+/* Same for textarea */
+.fw-textarea__native:placeholder-shown {
+  border: 1px dashed rgba(0,0,0,0.1);
+  border-radius: var(--fw-o-radius-field);
+  min-height: 36px;
+}
+.fw-textarea__native:placeholder-shown:hover {
+  border-color: rgba(0,0,0,0.15);
+}
+.fw-textarea__native:placeholder-shown:focus {
+  border: 1px solid var(--fw-o-primary);
+  border-style: solid;
 }
 
 .fw-text-input__tool-badge {
