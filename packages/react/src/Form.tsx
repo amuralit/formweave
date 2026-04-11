@@ -13,6 +13,7 @@ import {
 } from 'react';
 import type {
   FormProps,
+  FormMode,
   FieldDefinition,
   ThemeConfig,
   BrandInfo,
