@@ -2913,3 +2913,195 @@
   color: #8C8C96;
   border: 1px solid rgba(0,0,0,0.08);
 }
+
+/* ══════════════════════════════════════════════════════════════════
+   Wizard v2 — cleaner, smaller, no subtitle
+   ══════════════════════════════════════════════════════════════════ */
+
+.fw-wizard-nav__header {
+  padding: 12px 16px 0;
+}
+
+.fw-wizard-nav__steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+}
+
+.fw-wizard-nav__step-group {
+  display: flex;
+  align-items: center;
+}
+
+.fw-wizard-nav__step {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 600;
+  border: 1.5px solid rgba(0,0,0,0.1);
+  background: #fff;
+  color: #8C8C96;
+  cursor: pointer;
+  flex-shrink: 0;
+  padding: 0;
+  transition: all 0.15s ease;
+}
+
+.fw-wizard-nav__step--active {
+  background: #4285F4 !important;
+  border-color: #4285F4 !important;
+  color: #fff !important;
+}
+
+.fw-wizard-nav__step--completed {
+  background: #22c55e !important;
+  border-color: #22c55e !important;
+  color: #fff !important;
+}
+
+.fw-wizard-nav__connector {
+  width: 24px;
+  height: 1px;
+  background: rgba(0,0,0,0.08);
+  flex-shrink: 0;
+}
+
+.fw-wizard-nav__connector--filled {
+  background: #4285F4;
+}
+
+.fw-wizard-nav__progress {
+  height: 2px;
+  background: rgba(0,0,0,0.04);
+  border-radius: 1px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+
+.fw-wizard-nav__progress-fill {
+  height: 100%;
+  background: #4285F4 !important;
+  border-radius: 1px;
+  transition: width 0.3s ease;
+}
+
+.fw-wizard-nav__footer {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  border-top: 1px solid rgba(0,0,0,0.04);
+  gap: 8px;
+}
+
+.fw-wizard-nav__spacer {
+  flex: 1;
+}
+
+.fw-wizard-nav__btn {
+  padding: 6px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  border: none;
+}
+
+.fw-wizard-nav__btn--next,
+.fw-wizard-nav__btn--submit {
+  background: #4285F4 !important;
+  color: #fff !important;
+}
+
+.fw-wizard-nav__btn--next:hover,
+.fw-wizard-nav__btn--submit:hover {
+  background: #3367D6 !important;
+}
+
+.fw-wizard-nav__btn--back {
+  background: transparent;
+  border: 1px solid rgba(0,0,0,0.1);
+  color: #555;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   Chips v2 — smaller, tighter, more elegant
+   ══════════════════════════════════════════════════════════════════ */
+
+.fw-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(0,0,0,0.03);
+  border: 1px solid rgba(0,0,0,0.04);
+  border-radius: 16px;
+  padding: 2px 8px 2px 2px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #18181B;
+  cursor: default;
+}
+
+.fw-people-picker__avatar {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 600;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.fw-people-picker__name {
+  font-size: 12px;
+}
+
+.fw-people-picker__remove {
+  font-size: 11px;
+  color: transparent;
+  cursor: pointer;
+  padding: 0 2px;
+  transition: color 0.12s;
+}
+
+.fw-chip:hover .fw-people-picker__remove {
+  color: #8C8C96;
+}
+
+.fw-chip:hover .fw-people-picker__remove:hover {
+  color: #ef4444;
+}
+
+.fw-people-picker__add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  border: 1px dashed rgba(0,0,0,0.1);
+  border-radius: 16px;
+  padding: 4px 10px;
+  font-size: 11px;
+  color: #8C8C96;
+  cursor: pointer;
+  background: transparent;
+  transition: all 0.12s;
+}
+
+.fw-people-picker__add-btn:hover {
+  border-color: #4285F4;
+  border-style: solid;
+  color: #4285F4;
+}
+
+/* Smaller textarea empty state */
+.fw-textarea__native:placeholder-shown {
+  border: 1px dashed rgba(0,0,0,0.06);
+  min-height: 48px;
+}

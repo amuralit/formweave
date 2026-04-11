@@ -14,22 +14,12 @@ export interface WizardNavProps {
 
 export const WizardNav = forwardRef<HTMLDivElement, WizardNavProps>(
   function WizardNav(
-    {
-      pages,
-      currentPage,
-      onNavigate,
-      onSubmit,
-      submitLabel = 'Submit',
-      submitDisabled,
-      position = 'both',
-      className,
-    },
+    { pages, currentPage, onNavigate, onSubmit, submitLabel = 'Submit', submitDisabled, position = 'both', className },
     ref,
   ) {
     const totalPages = pages.length;
     const isFirst = currentPage === 0;
     const isLast = currentPage === totalPages - 1;
-    const currentLabel = pages[currentPage]?.label ?? '';
 
     const progressPercent = useMemo(() => {
       if (totalPages <= 1) return 100;
@@ -37,19 +27,16 @@ export const WizardNav = forwardRef<HTMLDivElement, WizardNavProps>(
     }, [currentPage, totalPages]);
 
     const rootCls = ['fw-wizard-nav', className].filter(Boolean).join(' ');
-
     const showHeader = position === 'header' || position === 'both';
     const showFooter = position === 'footer' || position === 'both';
 
     return (
-      <div ref={ref} className={rootCls} role="navigation" aria-label="Form wizard navigation">
+      <div ref={ref} className={rootCls} role="navigation" aria-label="Form wizard">
         {showHeader && (
-          <>
-            {/* Step indicators */}
-            <div className="fw-wizard-nav__steps" aria-hidden="true">
+          <div className="fw-wizard-nav__header">
+            <div className="fw-wizard-nav__steps">
               {pages.map((page, i) => {
-                const status =
-                  i < currentPage ? 'completed' : i === currentPage ? 'active' : 'upcoming';
+                const status = i < currentPage ? 'completed' : i === currentPage ? 'active' : 'upcoming';
                 return (
                   <div key={i} className="fw-wizard-nav__step-group">
                     <button
@@ -60,18 +47,13 @@ export const WizardNav = forwardRef<HTMLDivElement, WizardNavProps>(
                       aria-label={`Step ${i + 1}: ${page.label}`}
                     >
                       {status === 'completed' ? (
-                        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                          <path d="M3 8.5L6.5 12L13 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <svg width="10" height="10" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                          <path d="M3 8.5L6.5 12L13 4" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
                       ) : (
                         i + 1
                       )}
                     </button>
-                    {page.label && (
-                      <span className="fw-wizard-nav__step-label" aria-hidden="true">
-                        {page.label}
-                      </span>
-                    )}
                     {i < totalPages - 1 && (
                       <span className={`fw-wizard-nav__connector${i < currentPage ? ' fw-wizard-nav__connector--filled' : ''}`} />
                     )}
@@ -79,29 +61,22 @@ export const WizardNav = forwardRef<HTMLDivElement, WizardNavProps>(
                 );
               })}
             </div>
-
-            {/* Subtitle */}
-            <div className="fw-wizard-nav__subtitle" aria-live="polite">
-              Step {currentPage + 1} of {totalPages}
-              {currentLabel && <> &mdash; {currentLabel}</>}
-            </div>
-
-            {/* Progress bar */}
-            <div className="fw-wizard-nav__progress-track" role="progressbar" aria-valuenow={progressPercent} aria-valuemin={0} aria-valuemax={100}>
+            <div className="fw-wizard-nav__progress" role="progressbar" aria-valuenow={progressPercent} aria-valuemin={0} aria-valuemax={100}>
               <div className="fw-wizard-nav__progress-fill" style={{ width: `${progressPercent}%` }} />
             </div>
-          </>
+          </div>
         )}
 
         {showFooter && (
-          <div className="fw-wizard-nav__actions">
+          <div className="fw-wizard-nav__footer">
             {!isFirst && (
               <button type="button" className="fw-wizard-nav__btn fw-wizard-nav__btn--back" onClick={() => onNavigate(currentPage - 1)}>
                 Back
               </button>
             )}
+            <div className="fw-wizard-nav__spacer" />
             {isLast ? (
-              <button type="button" className="fw-wizard-nav__btn fw-wizard-nav__btn--submit" onClick={onSubmit} disabled={submitDisabled}>
+              <button type="submit" className="fw-wizard-nav__btn fw-wizard-nav__btn--submit" onClick={onSubmit} disabled={submitDisabled}>
                 {submitLabel}
               </button>
             ) : (
