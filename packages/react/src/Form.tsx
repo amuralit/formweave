@@ -99,7 +99,7 @@ interface FieldRendererProps {
 
 const FieldRenderer = memo(function FieldRenderer({ field, onBlur, onChange }: FieldRendererProps) {
   const { value, error, touched, aiPrefilled, setValue } = useFormField(field.path);
-  const { mode, isBlurred, hasSubmitted } = useFormContext();
+  const { mode, isBlurred, hasSubmitted, onToolCall } = useFormContext();
 
   const isReadOnly = mode === 'readonly';
   const isDisabled = mode === 'readonly';
@@ -153,6 +153,7 @@ const FieldRenderer = memo(function FieldRenderer({ field, onBlur, onChange }: F
           readOnly={isReadOnly}
           config={field}
           placeholder={isTitleInput ? (field.description || 'Enter title...') : undefined}
+          onToolCall={onToolCall}
         />
         {field.description && !displayError && !isTitleInput && (
           <p className="fw-field__description">{field.description}</p>
@@ -540,6 +541,9 @@ export function Form(props: FormProps) {
   }, []);
 
   // ─── 14. Build context value ───
+  // Get onToolCall from props
+  const { onToolCall } = props;
+
   const contextValue = useMemo<FormContextValue>(
     () => ({
       store,
@@ -551,8 +555,9 @@ export function Form(props: FormProps) {
       hasSubmitted,
       markBlurred,
       isBlurred,
+      onToolCall,
     }),
-    [store, themeConfig, themePreset, brand, mode, display, hasSubmitted, markBlurred, isBlurred],
+    [store, themeConfig, themePreset, brand, mode, display, hasSubmitted, markBlurred, isBlurred, onToolCall],
   );
 
   // ─── 15. Split fields by tier (memoized) ───

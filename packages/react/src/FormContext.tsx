@@ -26,6 +26,8 @@ export interface FormContextValue {
   markBlurred: (path: string) => void;
   /** Check if a field has been blurred */
   isBlurred: (path: string) => boolean;
+  /** Tool call handler for tool-enhanced fields */
+  onToolCall?: (toolName: string, args: Record<string, any>) => Promise<any>;
 }
 
 export const FormContext = createContext<FormContextValue | null>(null);

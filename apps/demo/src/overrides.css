@@ -453,6 +453,28 @@
   border-radius: 6px;
 }
 
+/* Tool-enhanced autocomplete */
+.fw-text-input__tool-badge {
+  color: var(--fw-o-primary); margin-left: 4px; vertical-align: middle;
+}
+.fw-text-input__suggestions {
+  position: absolute; top: 100%; left: 0; right: 0; z-index: 100;
+  background: #fff; border: 1.5px solid var(--fw-o-border); border-radius: 10px;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.08);
+  margin-top: 4px; overflow: hidden;
+  animation: fw-drop-in 0.12s ease-out;
+}
+.fw-text-input__suggestion {
+  display: block; width: 100%; text-align: left;
+  padding: 8px 12px; font-size: 13px; color: var(--fw-o-text);
+  border: none; background: none; cursor: pointer;
+  transition: background 0.1s;
+}
+.fw-text-input__suggestion:hover { background: #f5f5f5; }
+.fw-text-input__suggestion + .fw-text-input__suggestion {
+  border-top: 1px solid rgba(0,0,0,0.04);
+}
+
 .fw-text-input__footer { display: flex; justify-content: space-between; }
 .fw-text-input__error { font-size: 12px; color: #e53e3e; }
 .fw-text-input__count { font-size: 11px; color: #bbb; margin-left: auto; }
