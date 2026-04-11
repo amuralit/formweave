@@ -469,6 +469,7 @@
   padding: 8px 12px; font-size: 13px; color: var(--fw-o-text);
   border: none; background: none; cursor: pointer;
   transition: background 0.1s;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .fw-text-input__suggestion:hover { background: #f5f5f5; }
 .fw-text-input__suggestion + .fw-text-input__suggestion {

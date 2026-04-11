@@ -53,7 +53,9 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
     const debounceRef = useRef<ReturnType<typeof setTimeout>>();
 
     const hasToolMatch = !!config.toolMatch;
-    const autoCompleteAttr = getAutoComplete(config.path) || (hasToolMatch ? 'off' : undefined);
+    const autoCompleteAttr = hasToolMatch ? 'off' : getAutoComplete(config.path);
+    const isPhone = /^(phone|telephone|mobile|tel|cell)$/i.test(config.path);
+    const inputType = config.constraints.format === 'email' ? 'email' : isPhone ? 'tel' : 'text';
 
     const handleChange = useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -119,7 +121,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
           <input
             ref={inputRef}
             id={id}
-            type={config.constraints.format === 'email' ? 'email' : 'text'}
+            type={inputType}
             className="fw-text-input__native"
             value={value ?? ''}
             onChange={handleChange}

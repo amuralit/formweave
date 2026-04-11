@@ -135,23 +135,41 @@ const addressTools = [
   },
 ];
 
-// Simulated tool call handler — returns mock data
+// Simulated address database (in production this would be Google Places API)
+const ADDRESS_DB = [
+  '1600 Amphitheatre Pkwy, Mountain View, CA 94043',
+  '1 Apple Park Way, Cupertino, CA 95014',
+  '350 5th Ave, New York, NY 10118',
+  '1 Hacker Way, Menlo Park, CA 94025',
+  '410 Terry Ave N, Seattle, WA 98109',
+  '1455 Market St, San Francisco, CA 94103',
+  '1478 Vancouver Green, San Jose, CA 95134',
+  '2300 Traverwood Dr, Ann Arbor, MI 48105',
+  '100 Universal City Plaza, Universal City, CA 91608',
+  '233 S Wacker Dr, Chicago, IL 60606',
+  '1 Infinite Loop, Cupertino, CA 95014',
+  '1601 Willow Rd, Menlo Park, CA 94025',
+];
+
+// Simulated tool call handler — filters based on query like a real API
 async function handleToolCall(toolName: string, args: Record<string, any>) {
-  // Simulate network delay
-  await new Promise(r => setTimeout(r, 300));
+  await new Promise(r => setTimeout(r, 150));
+  const query = (args.query || '').toLowerCase();
 
   if (toolName === 'places_autocomplete') {
-    return [
-      { id: '1', name: '1600 Amphitheatre Pkwy, Mountain View, CA 94043' },
-      { id: '2', name: '1 Apple Park Way, Cupertino, CA 95014' },
-      { id: '3', name: '350 5th Ave, New York, NY 10118' },
-    ];
+    return ADDRESS_DB
+      .filter(a => a.toLowerCase().includes(query))
+      .slice(0, 5)
+      .map((a, i) => ({ id: String(i), name: a }));
   }
   if (toolName === 'contacts_search') {
-    return [
-      { id: 'a@example.com', name: 'Arun Bhaskar', email: 'arun@example.com' },
-      { id: 's@example.com', name: 'Sarah Chen', email: 'sarah@example.com' },
+    const contacts = [
+      { id: 'arun@example.com', name: 'Arun Bhaskar' },
+      { id: 'sarah@example.com', name: 'Sarah Chen' },
+      { id: 'mike@example.com', name: 'Mike Johnson' },
+      { id: 'lisa@example.com', name: 'Lisa Wang' },
     ];
+    return contacts.filter(c => c.name.toLowerCase().includes(query) || c.id.includes(query));
   }
   return [];
 }
