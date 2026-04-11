@@ -210,7 +210,7 @@
 /* ── Heading — Typography level 1: title ── */
 .fw-form-header__heading {
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: -0.01em;
   color: var(--fw-o-text);
   line-height: 1.15;
@@ -245,10 +245,10 @@
 
 /* ── Section label — Typography level 2 ── */
 .fw-field__label {
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: normal;
   color: var(--fw-o-text-muted);
   margin-bottom: 4px;
 }
@@ -270,10 +270,10 @@
 }
 
 .fw-field-group__label {
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: normal;
   color: var(--fw-o-text-muted);
   margin-bottom: 4px;
 }
@@ -296,10 +296,10 @@
 }
 
 .fw-title-input__label {
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: normal;
   color: var(--fw-o-text-muted);
 }
 
@@ -405,9 +405,9 @@
 }
 
 .fw-text-input__tool-badge {
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: none;
   letter-spacing: 0.04em;
   color: var(--fw-o-text-muted);
   background: rgba(0,0,0,0.03);
@@ -606,10 +606,10 @@
 }
 
 .fw-pill-selector__label {
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: normal;
   color: var(--fw-o-text-muted);
 }
 
@@ -650,7 +650,7 @@
   background: color-mix(in srgb, var(--fw-o-primary) 8%, transparent);
   border-color: color-mix(in srgb, var(--fw-o-primary) 20%, transparent);
   color: var(--fw-o-primary);
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .fw-pill-selector__pill--active:hover {
@@ -670,10 +670,10 @@
 }
 
 .fw-dropdown__label {
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: normal;
   color: var(--fw-o-text-muted);
 }
 
@@ -789,7 +789,7 @@
 
 .fw-dropdown__option--selected {
   color: var(--fw-o-primary);
-  font-weight: 600;
+  font-weight: 500;
   background: color-mix(in srgb, var(--fw-o-primary) 6%, transparent);
 }
 
@@ -818,10 +818,10 @@
 }
 
 .fw-datetime__label {
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: normal;
   color: var(--fw-o-text-muted);
 }
 
@@ -923,10 +923,10 @@
 }
 
 .fw-datetime__input-label {
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: normal;
   color: var(--fw-o-text-muted);
   min-width: 40px;
 }
@@ -964,10 +964,10 @@
 }
 
 .fw-people-picker__label {
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: normal;
   color: var(--fw-o-text-muted);
 }
 
@@ -1022,33 +1022,31 @@
 }
 
 .fw-people-picker__add-btn {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  border: 1px dashed rgba(0,0,0,0.08);
+  border-radius: 20px;
+  border: 1px dashed rgba(0,0,0,0.12);
   background: transparent;
   color: var(--fw-o-text-muted);
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
+  gap: 3px;
   cursor: pointer;
-  font-size: 14px;
-  line-height: 1;
-  transition:
-    border-color 150ms var(--fw-o-ease-out),
-    background-color 150ms var(--fw-o-ease-out),
-    color 150ms var(--fw-o-ease-out),
-    transform 80ms var(--fw-o-ease-out);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 10px;
+  transition: all 150ms var(--fw-o-ease-out);
 }
+.fw-people-picker__plus { font-size: 13px; }
+.fw-people-picker__add-text { font-size: 12px; }
 
 .fw-people-picker__add-btn:hover {
   border-color: var(--fw-o-primary);
+  border-style: solid;
   color: var(--fw-o-primary);
-  background: color-mix(in srgb, var(--fw-o-primary) 6%, transparent);
+  background: color-mix(in srgb, var(--fw-o-primary) 4%, transparent);
 }
 
 .fw-people-picker__add-btn:active {
-  transform: scale(0.98);
+  transform: scale(0.97);
 }
 
 /* ── People picker dropdown ── */
@@ -1176,10 +1174,10 @@
 }
 
 .fw-tag-input__label {
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: normal;
   color: var(--fw-o-text-muted);
 }
 
@@ -1228,7 +1226,7 @@
   cursor: pointer;
   border: none;
   padding: 0;
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1;
   transition: opacity 150ms var(--fw-o-ease-out);
 }
@@ -1267,10 +1265,10 @@
 }
 
 .fw-number-stepper__label {
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: normal;
   color: var(--fw-o-text-muted);
 }
 
@@ -1372,10 +1370,10 @@
 }
 
 .fw-progressive__label {
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: normal;
   color: var(--fw-o-text-muted);
 }
 
@@ -1443,7 +1441,7 @@
 /* ── Base button ── */
 .fw-form-footer__btn {
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
   border-radius: var(--fw-o-radius-field);
   padding: 8px 20px;
   cursor: pointer;
@@ -1536,39 +1534,42 @@
 }
 
 .fw-wizard-nav__step {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 13px;
+  justify-content: center;
+  font-size: 12px;
   font-weight: 500;
   color: var(--fw-o-text-muted);
-  padding: 4px 12px;
-  border-radius: var(--fw-o-radius-field);
+  border: 1.5px solid var(--fw-o-border);
+  background: var(--fw-o-bg-card);
   cursor: pointer;
-  white-space: nowrap;
-  transition:
-    color 150ms var(--fw-o-ease-out),
-    background-color 150ms var(--fw-o-ease-out);
+  transition: all 150ms var(--fw-o-ease-out);
+  flex-shrink: 0;
+  padding: 0;
 }
 
 .fw-wizard-nav__step:hover {
-  background: rgba(0,0,0,0.03);
-  color: var(--fw-o-text-secondary);
+  border-color: rgba(0,0,0,0.15);
 }
 
 .fw-wizard-nav__step--active {
-  color: var(--fw-o-primary);
-  font-weight: 600;
-  background: color-mix(in srgb, var(--fw-o-primary) 6%, transparent);
+  background: var(--fw-o-primary);
+  border-color: var(--fw-o-primary);
+  color: #fff;
 }
 
 .fw-wizard-nav__step--completed {
-  color: var(--fw-o-text);
+  background: #22c55e;
+  border-color: #22c55e;
+  color: #fff;
 }
 
 .fw-wizard-nav__connector {
-  width: 24px;
-  height: 1px;
+  width: 32px;
+  height: 1.5px;
   background: var(--fw-o-border);
   flex-shrink: 0;
 }
@@ -1607,7 +1608,7 @@
 
 .fw-wizard-nav__btn {
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
   border-radius: var(--fw-o-radius-field);
   padding: 8px 20px;
   cursor: pointer;
@@ -1699,7 +1700,7 @@
 
 .fw-accordion__title {
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--fw-o-text);
   flex: 1;
 }
@@ -1744,7 +1745,7 @@
   padding: 4px 12px;
   border-radius: 6px;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
   border: none;
   transition: all 120ms ease;
@@ -1835,4 +1836,37 @@
 .fw-dropdown__list::-webkit-scrollbar-thumb:hover,
 .fw-people-picker__list::-webkit-scrollbar-thumb:hover {
   background: rgba(0,0,0,0.14);
+}
+
+
+/* ══════════════════════════════════════════════════════════════════
+   Global: Kill ALL browser focus outlines
+   ══════════════════════════════════════════════════════════════════ */
+
+.fw-form *, .fw-form *:focus, .fw-form *:focus-visible {
+  outline: none !important;
+  outline-width: 0 !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   Responsive: Mobile-first adjustments
+   ══════════════════════════════════════════════════════════════════ */
+
+@container formweave (max-width: 360px) {
+  .fw-form__fields { padding: 8px 12px 12px; gap: 10px; }
+  .fw-form-header__body { padding: 10px 12px 8px; }
+  .fw-title-input__native { font-size: 15px; }
+  .fw-form-footer { padding: 10px 12px; }
+  .fw-form-footer__btn { padding: 7px 14px; font-size: 12px; }
+  .fw-datetime__display { padding: 8px 10px; }
+  .fw-datetime__day-num { font-size: 20px; }
+  .fw-wizard-nav__step { width: 24px; height: 24px; font-size: 12px; }
+  .fw-wizard-nav__connector { width: 16px; }
+  .fw-pill-selector__pill { padding: 4px 10px; font-size: 12px; }
+}
+
+@media (max-width: 480px) {
+  .fw-form.fw-form--card { border-radius: 12px; }
+  .fw-form__fields { padding: 8px 16px 12px; }
+  .fw-form-header__body { padding: 10px 16px 8px; }
 }

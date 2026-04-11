@@ -78,7 +78,8 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
     const debounceRef = useRef<ReturnType<typeof setTimeout>>();
 
     const hasToolMatch = !!config.toolMatch;
-    const autoCompleteAttr = hasToolMatch ? 'new-password' : getAutoComplete(config.path);
+    // Disable browser autocomplete to prevent native popups from covering our UI
+    const autoCompleteAttr = 'new-password';
     const isPhone = /^(phone|telephone|mobile|tel|cell)$/i.test(config.path);
     const inputType = config.constraints.format === 'email' ? 'email' : isPhone ? 'tel' : 'text';
 
