@@ -326,40 +326,25 @@ function AccordionWrapper({ title, defaultOpen, mode, onQuickApprove, onQuickDen
 
   return (
     <div className={`fw-accordion ${open ? 'fw-accordion--open' : ''}`}>
-      <div className="fw-accordion__header-row">
-        <button
-          type="button"
-          className="fw-accordion__header"
-          onClick={() => setOpen(!open)}
-          aria-expanded={open}
-        >
-          <span className="fw-accordion__title">{title}</span>
-          <span className="fw-accordion__chevron" aria-hidden="true">
-            {open ? '\u25B2' : '\u25BC'}
-          </span>
-        </button>
+      <div className="fw-accordion__header-row" onClick={() => setOpen(!open)}>
+        <span className="fw-accordion__title">{title}</span>
         {isApproval && !open && (
-          <div className="fw-accordion__quick-actions">
+          <div className="fw-accordion__quick-actions" onClick={(e) => e.stopPropagation()}>
             {onQuickDeny && (
-              <button
-                type="button"
-                className="fw-accordion__quick-btn fw-accordion__quick-btn--deny"
-                onClick={(e) => { e.stopPropagation(); onQuickDeny(); }}
-              >
+              <button type="button" className="fw-accordion__quick-btn fw-accordion__quick-btn--deny" onClick={onQuickDeny}>
                 Deny
               </button>
             )}
             {onQuickApprove && (
-              <button
-                type="button"
-                className="fw-accordion__quick-btn fw-accordion__quick-btn--approve"
-                onClick={(e) => { e.stopPropagation(); onQuickApprove(); }}
-              >
+              <button type="button" className="fw-accordion__quick-btn fw-accordion__quick-btn--approve" onClick={onQuickApprove}>
                 Approve
               </button>
             )}
           </div>
         )}
+        <span className="fw-accordion__chevron" aria-hidden="true">
+          {open ? '\u25B2' : '\u25BC'}
+        </span>
       </div>
       {open && <div className="fw-accordion__body">{children}</div>}
     </div>

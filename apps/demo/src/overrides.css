@@ -209,9 +209,9 @@
 
 /* ── Heading — Typography level 1: title ── */
 .fw-form-header__heading {
-  font-size: 26px;
-  font-weight: 750;
-  letter-spacing: -0.035em;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
   color: var(--fw-o-text);
   line-height: 1.15;
   margin: 0;
@@ -224,10 +224,17 @@
    ══════════════════════════════════════════════════════════════════ */
 
 .fw-form__fields {
-  padding: 20px 24px;
+  padding: 8px 20px 16px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 12px;
+}
+
+/* Hide redundant description when label already shows the same info */
+.fw-field__description {
+  font-size: 11px;
+  color: var(--fw-o-text-placeholder);
+  margin: 0;
 }
 
 .fw-field {
@@ -304,9 +311,9 @@
 }
 
 .fw-title-input__native {
-  font-size: 26px;
-  font-weight: 750;
-  letter-spacing: -0.035em;
+  font-size: 16px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
   color: var(--fw-o-text);
   border: none;
   background: transparent;
@@ -343,11 +350,16 @@
 }
 
 .fw-text-input__label {
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: normal;
   color: var(--fw-o-text-muted);
+  position: static !important;
+  display: block !important;
+  opacity: 1 !important;
+  transform: none !important;
+  margin-bottom: 2px;
 }
 
 /* Borderless by default, subtle hover bg, focus shows border + ring */
@@ -468,10 +480,15 @@
 }
 
 .fw-textarea__label {
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: normal;
+  position: static !important;
+  display: block !important;
+  opacity: 1 !important;
+  transform: none !important;
+  margin-bottom: 2px;
   color: var(--fw-o-text-muted);
 }
 
@@ -838,7 +855,7 @@
 }
 
 .fw-datetime__day-num {
-  font-size: 26px;
+  font-size: 18px;
   font-weight: 750;
   letter-spacing: -0.035em;
   color: var(--fw-o-text);
@@ -1675,26 +1692,16 @@
   margin-top: -1px;
 }
 
+/* Old header button — no longer used, header-row replaces it */
 .fw-accordion__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 16px;
-  cursor: pointer;
-  background: var(--fw-o-bg-card);
-  transition:
-    background-color 150ms var(--fw-o-ease-out);
-  user-select: none;
-}
-
-.fw-accordion__header:hover {
-  background: rgba(0,0,0,0.02);
+  display: none;
 }
 
 .fw-accordion__title {
   font-size: 13px;
   font-weight: 600;
   color: var(--fw-o-text);
+  flex: 1;
 }
 
 .fw-accordion__chevron {
@@ -1716,10 +1723,14 @@
 .fw-accordion__header-row {
   display: flex;
   align-items: center;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background 120ms ease;
+  gap: 8px;
 }
 
-.fw-accordion__header-row .fw-accordion__header {
-  flex: 1;
+.fw-accordion__header-row:hover {
+  background: rgba(0,0,0,0.015);
 }
 
 .fw-accordion__quick-actions {
