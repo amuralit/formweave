@@ -6066,8 +6066,8 @@
 .fw-datetime__label { display: none !important; }
 
 /* Hide internal labels for borderless inputs — placeholder is sufficient */
-.fw-text-input__label { display: none !important; }
-.fw-textarea__label { display: none !important; }
+/* .fw-text-input__label — VISIBLE (fields need names) */
+/* .fw-textarea__label — VISIBLE (fields need names) */
 
 /* Hide group labels — spacing alone communicates grouping */
 .fw-field-group__label { display: none !important; }
@@ -6087,8 +6087,8 @@
 }
 
 /* Additional label hiding */
-.fw-people-picker__label { display: none !important; }
-.fw-number-stepper__label { display: none !important; }
-.fw-pill-selector__label { display: none !important; }
-.fw-dropdown__label { display: none !important; }
-.fw-tag-input__label { display: none !important; }
+/* .fw-people-picker__label — VISIBLE (need "Attendees" etc) */
+/* .fw-number-stepper__label — VISIBLE */
+/* .fw-pill-selector__label — VISIBLE */
+/* .fw-dropdown__label — VISIBLE */
+/* .fw-tag-input__label — VISIBLE */
