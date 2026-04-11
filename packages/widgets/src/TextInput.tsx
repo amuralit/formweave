@@ -105,7 +105,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
         <label htmlFor={id} className="fw-text-input__label">
           {config.label}
           {hasToolMatch && (
-            <span className="fw-text-input__tool-badge" title={`Enhanced by ${config.toolMatch!.toolName}`}>
+            <span className="fw-text-input__tool-badge" aria-label={`Enhanced by ${config.toolMatch!.toolName}`}>
               <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
                 <circle cx="5" cy="5" r="4" stroke="currentColor" strokeWidth="1"/>
                 <path d="M3 5.5L4.5 7L7 3.5" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"/>

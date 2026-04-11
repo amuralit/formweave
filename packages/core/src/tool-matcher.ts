@@ -22,7 +22,7 @@ const TIER1_RULES: PatternRule[] = [
   },
   // Location fields → places autocomplete
   {
-    fieldPattern: /^(location|venue|place|address|city|where)$/i,
+    fieldPattern: /^(location|venue|place|address|street|where)$/i,
     toolPattern: /places?[._-]?(autocomplete|search|lookup|find)/i,
     enhancementType: 'autocomplete',
   },
