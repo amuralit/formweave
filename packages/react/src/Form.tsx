@@ -670,18 +670,18 @@ export function Form(props: FormProps) {
 
     // Build approval-mode actions
     if (mode === 'approval') {
-      const approvalActions = actions || [
-        {
-          label: 'Deny',
-          variant: 'danger' as const,
-          onClick: () => onCancel?.(),
-          position: 'right' as const,
-        },
-      ];
+      if (actions) {
+        return (
+          <FormFooter
+            actions={actions}
+            submitDisabled={isSubmitting}
+            submitLoading={isSubmitting}
+          />
+        );
+      }
 
       return (
         <FormFooter
-          actions={approvalActions}
           submitLabel={effectiveSubmitLabel}
           onSubmit={handleFooterSubmit}
           onCancel={onCancel}
@@ -747,8 +747,8 @@ export function Form(props: FormProps) {
         noValidate
         aria-label={heading || analysis.title || 'Form'}
       >
-        {/* Header for card, panel, accordion modes */}
-        {(display === 'card' || display === 'panel' || display === 'accordion') &&
+        {/* Header for card and panel modes (accordion has its own title) */}
+        {(display === 'card' || display === 'panel') &&
           renderHeader()}
 
         {/* Accordion wrapper */}
