@@ -121,14 +121,15 @@ export function ConditionalWrapper({
       className={`fw-conditional ${visible ? 'fw-conditional--visible' : 'fw-conditional--hidden'}`}
       aria-hidden={!visible}
       style={{
-        overflow: 'hidden',
-        transition: 'max-height 0.25s ease, opacity 0.2s ease',
-        maxHeight: visible ? '500px' : '0',
+        display: 'grid',
+        gridTemplateRows: visible ? '1fr' : '0fr',
         opacity: visible ? 1 : 0,
-        pointerEvents: visible ? 'auto' : 'none',
+        transition: 'grid-template-rows 200ms ease-out, opacity 150ms ease-out',
       }}
     >
-      {children}
+      <div style={{ overflow: 'hidden', pointerEvents: visible ? 'auto' : 'none' }}>
+        {children}
+      </div>
     </div>
   );
 }

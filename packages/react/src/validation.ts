@@ -22,7 +22,15 @@ export function createValidator(schema: JSONSchema7): Validator {
 // ─── Format validators ───
 
 const FORMAT_VALIDATORS: Record<string, (v: string) => boolean> = {
-  email: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v),
+  email: (v) => {
+    if (typeof document !== 'undefined') {
+      const input = document.createElement('input');
+      input.type = 'email';
+      input.value = v;
+      return input.validity.valid;
+    }
+    return /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/.test(v);
+  },
   uri: (v) => {
     try {
       new URL(v);
@@ -49,7 +57,18 @@ const FORMAT_VALIDATORS: Record<string, (v: string) => boolean> = {
       return Number.isInteger(n) && n >= 0 && n <= 255 && p === String(n);
     });
   },
-  ipv6: (v) => /^([0-9a-f]{1,4}:){7}[0-9a-f]{1,4}$/i.test(v) || /^::$/.test(v),
+  ipv6: (v) => {
+    const parts = v.split(':');
+    if (parts.length < 3 || parts.length > 8) return false;
+    const doubleColonCount = (v.match(/::/g) || []).length;
+    if (doubleColonCount > 1) return false;
+    for (const part of parts) {
+      if (part.length > 4) return false;
+      if (part.length > 0 && !/^[0-9a-fA-F]+$/.test(part)) return false;
+    }
+    if (doubleColonCount === 0 && parts.length !== 8) return false;
+    return true;
+  },
   'date-time': (v) => !isNaN(Date.parse(v)),
   date: (v) => /^\d{4}-\d{2}-\d{2}$/.test(v) && !isNaN(Date.parse(v)),
   time: (v) => /^\d{2}:\d{2}(:\d{2})?$/.test(v),
@@ -173,13 +192,31 @@ export function validateField(
   value: any,
 ): string | undefined {
   const schema = validator.schema;
-  const fieldSchema = schema.properties?.[path];
+
+  // Resolve nested path: "address.street" -> schema.properties.address.properties.street
+  let fieldSchema: JSONSchema7 | undefined;
+  let isRequired = false;
+
+  const segments = path.split('.');
+  if (segments.length === 1) {
+    fieldSchema = schema.properties?.[path];
+    isRequired = schema.required?.includes(path) ?? false;
+  } else {
+    let current: any = schema;
+    for (let i = 0; i < segments.length; i++) {
+      if (!current?.properties?.[segments[i]]) { return undefined; }
+      if (i === segments.length - 1) {
+        fieldSchema = current.properties[segments[i]];
+        isRequired = current.required?.includes(segments[i]) ?? false;
+      } else {
+        current = current.properties[segments[i]];
+      }
+    }
+  }
+
   if (!fieldSchema) return undefined;
-
-  const isRequired = schema.required?.includes(path) ?? false;
-  const label = fieldSchema.title || path;
-
-  return validateValue(value, fieldSchema, label, isRequired);
+  const label = (fieldSchema as any).title || segments[segments.length - 1];
+  return validateValue(value, fieldSchema as JSONSchema7, label, isRequired);
 }
 
 /**

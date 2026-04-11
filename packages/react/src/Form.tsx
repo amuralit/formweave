@@ -397,6 +397,27 @@ export function Form(props: FormProps) {
   }
   const store = storeRef.current;
 
+  // ─── 3b. Sync values prop to store (only for untouched fields) ───
+  useEffect(() => {
+    if (!storeRef.current) return;
+    const state = storeRef.current.getState();
+    const updates: Record<string, any> = {};
+    let hasUpdates = false;
+
+    for (const [key, val] of Object.entries(mergedInitialValues)) {
+      if (!state.touched[key] && state.values[key] !== val) {
+        updates[key] = val;
+        hasUpdates = true;
+      }
+    }
+
+    if (hasUpdates) {
+      state.setValues({ ...state.values, ...updates });
+      const aiPaths = Object.keys(updates);
+      state.markAiPrefilled(aiPaths);
+    }
+  }, [mergedInitialValues]);
+
   // ─── 4. Resolve theme ───
   const { themePreset, themeConfig } = useMemo(
     () => resolveThemeFromProp(theme, density),

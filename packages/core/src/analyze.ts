@@ -9,6 +9,7 @@ import type {
   ToolMatch,
   FieldCondition,
 } from './types';
+import { dereferenceSchema } from './dereference';
 import { resolveWidget, resolveWidgets } from './widget-resolver';
 import type { ResolverContext } from './widget-resolver';
 import { humanizeFieldName, inferActionLabel } from './label-utils';
@@ -198,9 +199,12 @@ function buildChildren(
  * 8. Assemble final result
  */
 export function analyzeSchema(
-  schema: JSONSchema7,
+  rawSchema: JSONSchema7,
   options?: AnalyzeOptions
 ): SchemaAnalysis {
+  // ── Step 0: Dereference $ref pointers ──
+  const schema = dereferenceSchema(rawSchema);
+
   const properties = schema.properties || {};
   const allFieldNames = Object.keys(properties);
 

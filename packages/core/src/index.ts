@@ -4,6 +4,9 @@
 export { analyzeSchema } from './analyze';
 export type { AnalyzeOptions } from './analyze';
 
+// Schema $ref resolution
+export { dereferenceSchema } from './dereference';
+
 // Widget resolver
 export { resolveWidget, resolveWidgets } from './widget-resolver';
 export type { ResolverContext } from './widget-resolver';

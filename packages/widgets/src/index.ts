@@ -5,7 +5,6 @@ export type { TextInputProps } from './TextInput';
 export { Textarea } from './Textarea';
 
 export { NumberStepper } from './NumberStepper';
-export type { NumberStepperProps } from './NumberStepper';
 
 export { Toggle } from './Toggle';
 

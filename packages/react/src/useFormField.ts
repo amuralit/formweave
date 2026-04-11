@@ -1,7 +1,9 @@
 // ─── Hook for individual field state ───
 // Subscribes to only this field's slice of the store for optimal re-renders.
 
-import { useSyncExternalStore, useCallback } from 'react';
+import { useCallback } from 'react';
+import { useStoreWithEqualityFn } from 'zustand/traditional';
+import { shallow } from 'zustand/shallow';
 import { useFormContext } from './FormContext';
 
 export interface FormFieldState {
@@ -20,54 +22,26 @@ export interface FormFieldState {
 export function useFormField(path: string): FormFieldState {
   const { store } = useFormContext();
 
-  // Subscribe to the value slice
-  const value = useSyncExternalStore(
-    store.subscribe,
-    () => store.getState().values[path],
-    () => store.getState().values[path],
-  );
-
-  // Subscribe to the error slice
-  const error = useSyncExternalStore(
-    store.subscribe,
-    () => store.getState().errors[path],
-    () => store.getState().errors[path],
-  );
-
-  // Subscribe to the touched slice
-  const touched = useSyncExternalStore(
-    store.subscribe,
-    () => store.getState().touched[path] ?? false,
-    () => store.getState().touched[path] ?? false,
-  );
-
-  // Subscribe to the aiPrefilled slice
-  const aiPrefilled = useSyncExternalStore(
-    store.subscribe,
-    () => store.getState().aiPrefilled[path] ?? false,
-    () => store.getState().aiPrefilled[path] ?? false,
+  const fieldState = useStoreWithEqualityFn(
+    store,
+    (state) => ({
+      value: state.values[path],
+      error: state.errors[path],
+      touched: state.touched[path] ?? false,
+      aiPrefilled: state.aiPrefilled[path] ?? false,
+    }),
+    shallow,
   );
 
   const setValue = useCallback(
-    (newValue: any) => {
-      store.getState().setValue(path, newValue);
-    },
+    (newValue: any) => { store.getState().setValue(path, newValue); },
     [store, path],
   );
 
   const setError = useCallback(
-    (newError: string | undefined) => {
-      store.getState().setError(path, newError);
-    },
+    (newError: string | undefined) => { store.getState().setError(path, newError); },
     [store, path],
   );
 
-  return {
-    value,
-    error,
-    touched,
-    aiPrefilled,
-    setValue,
-    setError,
-  };
+  return { ...fieldState, setValue, setError };
 }
