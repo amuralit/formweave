@@ -1,5 +1,27 @@
 import { forwardRef, useId, useRef, useCallback, useEffect } from 'react';
-import type { WidgetProps } from '@formweave/core';
+import type { WidgetProps, FieldDefinition } from '@formweave/core';
+
+function getContextualPlaceholder(config: FieldDefinition): string {
+  const name = config.path.toLowerCase();
+  const format = config.constraints.format;
+
+  if (format === 'email') return 'name@company.com';
+  if (format === 'uri' || format === 'url') return 'https://';
+  if (/^(phone|tel|mobile)/.test(name)) return '(555) 000-0000';
+  if (/^(street|address)/.test(name)) return 'Search for an address...';
+  if (/^(city)/.test(name)) return 'City name';
+  if (/^(state|province|region)/.test(name)) return 'State or province';
+  if (/^(zip|postal|postcode)/.test(name)) return '00000';
+  if (/^(name|full_name)/.test(name)) return 'Full name';
+  if (/^(company|org)/.test(name)) return 'Company name';
+  if (/^(description|body|content|notes)/.test(name)) return 'Add a description...';
+  if (/^(title|summary|subject|heading)/.test(name)) return 'Give it a title...';
+  if (/^(location|venue|place)/.test(name)) return 'Conference room or virtual link';
+  if (/^(channel)/.test(name)) return '#channel-name';
+  if (/^(project)/.test(name)) return 'Project name';
+  if (/^(repo|repository)/.test(name)) return 'owner/repository';
+  return config.description || '';
+}
 
 export const Textarea = forwardRef<HTMLTextAreaElement, WidgetProps<string>>(
   function Textarea(
@@ -64,7 +86,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, WidgetProps<string>>(
           disabled={disabled}
           readOnly={readOnly}
           autoFocus={autoFocus}
-          placeholder={placeholder || 'Type here...'}
+          placeholder={placeholder || getContextualPlaceholder(config)}
           maxLength={maxLength}
           rows={3}
           aria-invalid={!!error}

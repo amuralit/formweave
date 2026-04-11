@@ -314,25 +314,53 @@ function GroupedFieldRenderer({ fields, onBlur, onChange }: GroupedFieldRenderer
 interface AccordionWrapperProps {
   title: string;
   defaultOpen?: boolean;
+  mode?: FormMode;
+  onQuickApprove?: () => void;
+  onQuickDeny?: () => void;
   children: React.ReactNode;
 }
 
-function AccordionWrapper({ title, defaultOpen, children }: AccordionWrapperProps) {
+function AccordionWrapper({ title, defaultOpen, mode, onQuickApprove, onQuickDeny, children }: AccordionWrapperProps) {
   const [open, setOpen] = useState(defaultOpen ?? true);
+  const isApproval = mode === 'approval';
 
   return (
     <div className={`fw-accordion ${open ? 'fw-accordion--open' : ''}`}>
-      <button
-        type="button"
-        className="fw-accordion__header"
-        onClick={() => setOpen(!open)}
-        aria-expanded={open}
-      >
-        <span className="fw-accordion__title">{title}</span>
-        <span className="fw-accordion__chevron" aria-hidden="true">
-          {open ? '\u25B2' : '\u25BC'}
-        </span>
-      </button>
+      <div className="fw-accordion__header-row">
+        <button
+          type="button"
+          className="fw-accordion__header"
+          onClick={() => setOpen(!open)}
+          aria-expanded={open}
+        >
+          <span className="fw-accordion__title">{title}</span>
+          <span className="fw-accordion__chevron" aria-hidden="true">
+            {open ? '\u25B2' : '\u25BC'}
+          </span>
+        </button>
+        {isApproval && !open && (
+          <div className="fw-accordion__quick-actions">
+            {onQuickDeny && (
+              <button
+                type="button"
+                className="fw-accordion__quick-btn fw-accordion__quick-btn--deny"
+                onClick={(e) => { e.stopPropagation(); onQuickDeny(); }}
+              >
+                Deny
+              </button>
+            )}
+            {onQuickApprove && (
+              <button
+                type="button"
+                className="fw-accordion__quick-btn fw-accordion__quick-btn--approve"
+                onClick={(e) => { e.stopPropagation(); onQuickApprove(); }}
+              >
+                Approve
+              </button>
+            )}
+          </div>
+        )}
+      </div>
       {open && <div className="fw-accordion__body">{children}</div>}
     </div>
   );
@@ -772,6 +800,9 @@ export function Form(props: FormProps) {
           <AccordionWrapper
             title={accordionTitle || heading || analysis.title || 'Form'}
             defaultOpen={accordionDefaultOpen}
+            mode={mode}
+            onQuickApprove={onSubmit ? handleFooterSubmit : undefined}
+            onQuickDeny={onCancel}
           >
             {formContent}
           </AccordionWrapper>

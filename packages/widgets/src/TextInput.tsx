@@ -1,5 +1,5 @@
 import { forwardRef, useId, useRef, useCallback, useState, useEffect } from 'react';
-import type { WidgetProps } from '@formweave/core';
+import type { WidgetProps, FieldDefinition } from '@formweave/core';
 
 export interface TextInputProps extends WidgetProps<string> {
   icon?: React.ReactNode;
@@ -29,6 +29,28 @@ function getAutoComplete(fieldName: string): string | undefined {
   return AUTOCOMPLETE_MAP[lower];
 }
 
+function getContextualPlaceholder(config: FieldDefinition): string {
+  const name = config.path.toLowerCase();
+  const format = config.constraints.format;
+
+  if (format === 'email') return 'name@company.com';
+  if (format === 'uri' || format === 'url') return 'https://';
+  if (/^(phone|tel|mobile)/.test(name)) return '(555) 000-0000';
+  if (/^(street|address)/.test(name)) return 'Search for an address...';
+  if (/^(city)/.test(name)) return 'City name';
+  if (/^(state|province|region)/.test(name)) return 'State or province';
+  if (/^(zip|postal|postcode)/.test(name)) return '00000';
+  if (/^(name|full_name)/.test(name)) return 'Full name';
+  if (/^(company|org)/.test(name)) return 'Company name';
+  if (/^(description|body|content|notes)/.test(name)) return 'Add a description...';
+  if (/^(title|summary|subject|heading)/.test(name)) return 'Give it a title...';
+  if (/^(location|venue|place)/.test(name)) return 'Conference room or virtual link';
+  if (/^(channel)/.test(name)) return '#channel-name';
+  if (/^(project)/.test(name)) return 'Project name';
+  if (/^(repo|repository)/.test(name)) return 'owner/repository';
+  return config.description || '';
+}
+
 export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
   function TextInput(
     {
@@ -56,7 +78,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
     const debounceRef = useRef<ReturnType<typeof setTimeout>>();
 
     const hasToolMatch = !!config.toolMatch;
-    const autoCompleteAttr = hasToolMatch ? 'off' : getAutoComplete(config.path);
+    const autoCompleteAttr = hasToolMatch ? 'new-password' : getAutoComplete(config.path);
     const isPhone = /^(phone|telephone|mobile|tel|cell)$/i.test(config.path);
     const inputType = config.constraints.format === 'email' ? 'email' : isPhone ? 'tel' : 'text';
 
@@ -149,7 +171,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
             disabled={disabled}
             readOnly={readOnly}
             autoFocus={autoFocus}
-            placeholder={placeholder || 'Type here...'}
+            placeholder={placeholder || getContextualPlaceholder(config)}
             maxLength={maxLength}
             autoComplete={autoCompleteAttr}
             aria-invalid={!!error}
