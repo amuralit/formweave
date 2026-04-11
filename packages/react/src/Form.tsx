@@ -673,8 +673,8 @@ export function Form(props: FormProps) {
 
         {nonEssentialCount > 0 && (
           <ProgressiveDisclosure
-            hint={disclosureHint}
-            label={`${nonEssentialCount} more ${nonEssentialCount === 1 ? 'field' : 'fields'}`}
+            hint=""
+            label={`+ ${nonEssentialCount} more`}
             expanded={disclosureExpanded}
             onToggle={setDisclosureExpanded}
           >

@@ -131,7 +131,7 @@ export const DropdownSelect = forwardRef<HTMLDivElement, WidgetProps<string>>(
     }, [open, ref, closeDropdown]);
 
     const displayValue =
-      value != null && value !== '' ? value : placeholder ?? config.label;
+      value != null && value !== '' ? value : placeholder ?? 'Select...';
 
     const rootCls = [
       'fw-dropdown',
