@@ -77,7 +77,7 @@ import { assignTiers } from '../progressive-disclosure';
 import { detectGroups } from '../grouping';
 import { parseConditionals } from '../conditionals';
 import { computeWizard } from '../wizard';
-import type { JSONSchema7, ResolverContext } from '../types';
+import type { JSONSchema7 } from '../types';
 
 // ════════════════════════════════════════════════════════════════════════════════
 // Benchmark utilities
@@ -111,12 +111,14 @@ function benchmarkMedian(fn: () => void, iterations: number): number {
  * Returns bytes allocated (approximate).
  */
 function measureMemory(fn: () => void): { heapDelta: number } {
+  // @ts-ignore — process.memoryUsage may not be available in all environments
+  const hasMem = typeof process !== 'undefined' && typeof process.memoryUsage === 'function';
   if (typeof globalThis.gc === 'function') {
-    globalThis.gc();
+    (globalThis as any).gc();
   }
-  const before = process.memoryUsage().heapUsed;
+  const before = hasMem ? (process as any).memoryUsage().heapUsed : 0;
   fn();
-  const after = process.memoryUsage().heapUsed;
+  const after = hasMem ? (process as any).memoryUsage().heapUsed : 0;
   return { heapDelta: Math.max(0, after - before) };
 }
 
