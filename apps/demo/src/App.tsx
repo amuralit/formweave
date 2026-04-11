@@ -102,6 +102,60 @@ const stripeSchema = {
   },
 };
 
+// ─── 7. Smart Address — Tool-Aware Enhancement ───
+const shippingSchema = {
+  type: 'object' as const,
+  required: ['name', 'street', 'city', 'state', 'zip', 'country'],
+  properties: {
+    name: { type: 'string', description: 'Full name' },
+    email: { type: 'string', format: 'email' },
+    phone: { type: 'string' },
+    street: { type: 'string', description: 'Street address' },
+    apartment: { type: 'string', description: 'Apt, suite, unit' },
+    city: { type: 'string' },
+    state: { type: 'string' },
+    zip: { type: 'string', pattern: '^[0-9]{5}(-[0-9]{4})?$' },
+    country: { type: 'string', enum: ['US', 'CA', 'UK', 'AU', 'DE', 'FR', 'JP', 'IN'] },
+    delivery_instructions: { type: 'string' },
+    is_default: { type: 'boolean' },
+  },
+};
+
+// Simulated MCP tools for address enhancement
+const addressTools = [
+  {
+    name: 'places_autocomplete',
+    description: 'Search for addresses and places',
+    inputSchema: { type: 'object' as const, properties: { query: { type: 'string' } } },
+  },
+  {
+    name: 'contacts_search',
+    description: 'Search contacts by name or email',
+    inputSchema: { type: 'object' as const, properties: { query: { type: 'string' } } },
+  },
+];
+
+// Simulated tool call handler — returns mock data
+async function handleToolCall(toolName: string, args: Record<string, any>) {
+  // Simulate network delay
+  await new Promise(r => setTimeout(r, 300));
+
+  if (toolName === 'places_autocomplete') {
+    return [
+      { id: '1', name: '1600 Amphitheatre Pkwy, Mountain View, CA 94043' },
+      { id: '2', name: '1 Apple Park Way, Cupertino, CA 95014' },
+      { id: '3', name: '350 5th Ave, New York, NY 10118' },
+    ];
+  }
+  if (toolName === 'contacts_search') {
+    return [
+      { id: 'a@example.com', name: 'Arun Bhaskar', email: 'arun@example.com' },
+      { id: 's@example.com', name: 'Sarah Chen', email: 'sarah@example.com' },
+    ];
+  }
+  return [];
+}
+
 function Section({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="demo-section">
@@ -194,7 +248,26 @@ export function App() {
         />
       </Section>
 
-      {/* 6. Batch Approval — 3 tools stacked as accordions */}
+      {/* 6. Smart Address — Tool-Aware Enhancement */}
+      <Section label="Shipping — Smart Address with Tool Enhancement">
+        <Form
+          schema={shippingSchema}
+          values={{
+            name: 'Arun Bhaskar',
+            email: 'arun@example.com',
+            country: 'US',
+          }}
+          server={{ name: 'Stripe' }}
+          heading="Shipping address"
+          submitLabel="Save address"
+          tools={addressTools}
+          onToolCall={handleToolCall}
+          onSubmit={(data) => console.log('Address:', data)}
+          onCancel={() => console.log('Cancelled')}
+        />
+      </Section>
+
+      {/* 7. Batch Approval — 3 tools stacked as accordions */}
       <Section label="Batch Approval — 3 Agent Actions">
         {[
           {
