@@ -288,7 +288,31 @@ export function App() {
         />
       </Section>
 
-      {/* 7. Batch Approval — 3 tools stacked as accordions */}
+      {/* 7. Compact — Completed action summary */}
+      <Section label="Compact — Completed Action">
+        <Form
+          schema={{ type: 'object' as const, properties: { text: { type: 'string' } } }}
+          server={{ name: 'Slack' }}
+          heading="message sent"
+          display="compact"
+          onSubmit={() => console.log('View clicked')}
+        />
+        <Form
+          schema={{ type: 'object' as const, properties: { summary: { type: 'string' } } }}
+          server={{ name: 'Google Calendar' }}
+          heading="event created"
+          display="compact"
+          onSubmit={() => console.log('View clicked')}
+        />
+        <Form
+          schema={{ type: 'object' as const, properties: { title: { type: 'string' } } }}
+          server={{ name: 'Jira' }}
+          heading="issue created"
+          display="compact"
+        />
+      </Section>
+
+      {/* 8. Batch Approval — 3 tools stacked as accordions */}
       <Section label="Batch Approval — 3 Agent Actions">
         {[
           {

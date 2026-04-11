@@ -3,6 +3,7 @@ import { forwardRef } from 'react';
 export interface FormHeaderProps {
   serviceName?: string;
   serviceIcon?: string;
+  serviceSvg?: string;
   serviceEmoji?: string;
   serviceColor?: string;
   actionLabel?: string;
@@ -17,6 +18,7 @@ export const FormHeader = forwardRef<HTMLDivElement, FormHeaderProps>(
     {
       serviceName,
       serviceIcon,
+      serviceSvg,
       serviceEmoji,
       serviceColor,
       actionLabel,
@@ -43,21 +45,29 @@ export const FormHeader = forwardRef<HTMLDivElement, FormHeaderProps>(
 
         <div className="fw-form-header__body">
           {/* Service badge */}
-          {(serviceIcon || serviceEmoji || serviceName) && (
+          {(serviceIcon || serviceSvg || serviceEmoji || serviceName) && (
             <div className="fw-form-header__service">
-              {serviceIcon && (
+              {serviceIcon ? (
                 <img
                   src={serviceIcon}
                   alt=""
                   className="fw-form-header__service-icon"
                   aria-hidden="true"
                 />
-              )}
-              {serviceEmoji && (
+              ) : serviceSvg ? (
+                <svg
+                  className="fw-form-header__service-icon"
+                  viewBox="0 0 24 24"
+                  width="20"
+                  height="20"
+                  aria-hidden="true"
+                  dangerouslySetInnerHTML={{ __html: serviceSvg }}
+                />
+              ) : serviceEmoji ? (
                 <span className="fw-form-header__service-emoji" aria-hidden="true">
                   {serviceEmoji}
                 </span>
-              )}
+              ) : null}
               {serviceName && (
                 <span className="fw-form-header__service-name">
                   {serviceName}

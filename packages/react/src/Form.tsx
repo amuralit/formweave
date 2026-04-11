@@ -737,9 +737,10 @@ export function Form(props: FormProps) {
     if (display === 'inline') return null;
 
     const isFaviconUrl = brand.source === 'favicon' && brand.icon.startsWith('http');
-    // Pass favicon URLs as serviceIcon, emojis as serviceEmoji
+    // Pass favicon URLs as serviceIcon, SVG paths as serviceSvg, emojis as serviceEmoji
     const serviceIcon = isFaviconUrl ? brand.icon : undefined;
-    const serviceEmoji = !isFaviconUrl && brand.icon ? brand.icon : undefined;
+    const serviceSvg = !isFaviconUrl && brand.svg ? brand.svg : undefined;
+    const serviceEmoji = !isFaviconUrl && !brand.svg && brand.icon ? brand.icon : undefined;
 
     const effectiveHeading =
       heading ||
@@ -752,6 +753,7 @@ export function Form(props: FormProps) {
       <FormHeader
         serviceName={brand.name !== 'Form' ? brand.name : undefined}
         serviceIcon={serviceIcon}
+        serviceSvg={serviceSvg}
         serviceEmoji={serviceEmoji}
         serviceColor={brand.color}
         actionLabel={effectiveHeading}
@@ -759,6 +761,37 @@ export function Form(props: FormProps) {
       />
     );
   };
+
+  // ─── Compact display mode ───
+  if (display === 'compact') {
+    const isFaviconUrl = brand.source === 'favicon' && brand.icon.startsWith('http');
+    const compactSvg = !isFaviconUrl && brand.svg ? brand.svg : undefined;
+    const compactIcon = isFaviconUrl ? brand.icon : undefined;
+    const compactEmoji = !isFaviconUrl && !brand.svg && brand.icon ? brand.icon : undefined;
+    const summaryText = `${server?.name ?? 'Form'} ${heading || 'action completed'}`;
+
+    return (
+      <FormContext.Provider value={contextValue}>
+        <div className={rootCls} style={style} aria-label={summaryText}>
+          <div className="fw-compact">
+            {compactIcon ? (
+              <img src={compactIcon} alt="" className="fw-compact__icon" aria-hidden="true" />
+            ) : compactSvg ? (
+              <svg className="fw-compact__icon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" dangerouslySetInnerHTML={{ __html: compactSvg }} />
+            ) : compactEmoji ? (
+              <span className="fw-compact__icon" aria-hidden="true">{compactEmoji}</span>
+            ) : null}
+            <span className="fw-compact__text">{summaryText}</span>
+            {onSubmit && (
+              <button type="button" className="fw-compact__action" onClick={() => onSubmit({})}>
+                View
+              </button>
+            )}
+          </div>
+        </div>
+      </FormContext.Provider>
+    );
+  }
 
   const formContent = (
     <>

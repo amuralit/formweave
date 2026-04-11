@@ -171,6 +171,7 @@ export interface ServerConfig {
 export interface BrandInfo {
   name: string;
   icon: string;
+  svg?: string;
   color: string;
   source: 'explicit' | 'favicon' | 'registry' | 'generated';
 }
@@ -190,7 +191,7 @@ export interface ActionConfig {
 
 // ─── Display modes ───
 
-export type DisplayMode = 'card' | 'inline' | 'accordion' | 'panel' | 'wizard';
+export type DisplayMode = 'card' | 'inline' | 'accordion' | 'panel' | 'wizard' | 'compact';
 export type FormMode = 'edit' | 'approval' | 'readonly';
 
 // ─── Public Form component API ───
