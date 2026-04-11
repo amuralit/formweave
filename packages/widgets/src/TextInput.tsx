@@ -75,7 +75,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
     const maxLength = config.constraints.maxLength;
     const [suggestions, setSuggestions] = useState<Array<{ id: string; name: string }>>([]);
     const [showSuggestions, setShowSuggestions] = useState(false);
-    const debounceRef = useRef<ReturnType<typeof setTimeout>>();
+    const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
     const hasToolMatch = !!config.toolMatch;
     // Disable browser autocomplete to prevent native popups from covering our UI
