@@ -140,8 +140,8 @@ export const PeoplePicker = forwardRef<HTMLDivElement, PeoplePickerProps>(
         <span id={`${id}-label`} className="fw-people-picker__label">
           {config.label}
           {people.length > 0 && (
-            <span className="fw-people-picker__count" aria-label={`${people.length} ${people.length === 1 ? 'person' : 'people'} selected`}>
-              {people.length} {people.length === 1 ? 'person' : 'people'}
+            <span className="fw-people-picker__count">
+              {' '}{people.length} {people.length === 1 ? 'person' : 'people'}
             </span>
           )}
         </span>

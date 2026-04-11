@@ -2709,3 +2709,207 @@
     padding: 10px 16px 8px;
   }
 }
+
+/* ══════════════════════════════════════════════════════════════════
+   Missing CSS rules — added for new component features
+   ══════════════════════════════════════════════════════════════════ */
+
+/* Wizard step labels — tiny below circles */
+.fw-wizard-nav__step-label {
+  font-size: 8px;
+  color: #8C8C96;
+  max-width: 48px;
+  text-align: center;
+  line-height: 1.1;
+  display: none; /* hide for now — too noisy */
+}
+
+/* Wizard step group — vertical layout for circle + label */
+.fw-wizard-nav__step-group {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+/* Fix datetime layout — horizontal, compact */
+.fw-datetime__display {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.fw-datetime__block {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.fw-datetime__day-num {
+  font-size: 22px;
+  font-weight: 700;
+  color: #4285F4;
+  line-height: 1;
+}
+
+.fw-datetime__day-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.fw-datetime__day-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #18181B;
+}
+
+.fw-datetime__month {
+  font-size: 10px;
+  color: #8C8C96;
+}
+
+.fw-datetime__time-range {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.fw-datetime__time {
+  font-size: 13px;
+  font-weight: 600;
+  color: #18181B;
+}
+
+.fw-datetime__relative {
+  font-size: 10px;
+  color: #8C8C96;
+  margin-left: 4px;
+}
+
+/* Fix address fields — stack vertically, not horizontally */
+.fw-field-group__fields {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* People picker count badge — add space */
+.fw-people-picker__count {
+  margin-left: 4px;
+  font-size: 11px;
+  color: #8C8C96;
+  font-weight: 400;
+}
+
+/* Tag input count badge */
+.fw-tag-input__count {
+  margin-left: 4px;
+  font-size: 11px;
+  color: #8C8C96;
+  font-weight: 400;
+}
+
+/* Title input — allow wrapping, don't truncate */
+.fw-title-input__native {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+  word-wrap: break-word;
+}
+
+/* Number stepper hint */
+.fw-number-stepper__hint {
+  font-size: 10px;
+  color: #C8C8D0;
+  margin-top: 2px;
+}
+
+/* Fix compact card layout */
+.fw-compact {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 12px;
+}
+
+.fw-compact__icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.fw-compact__text {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 500;
+  color: #18181B;
+}
+
+.fw-compact__action {
+  padding: 5px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #4285F4 !important;
+  color: #fff !important;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.fw-form--compact {
+  background: none;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+/* Fix accordion quick actions */
+.fw-accordion__header-row {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  cursor: pointer;
+  gap: 8px;
+}
+
+.fw-accordion__header-row:hover {
+  background: rgba(0,0,0,0.015);
+}
+
+.fw-accordion__title {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 600;
+  color: #18181B;
+}
+
+.fw-accordion__quick-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.fw-accordion__quick-btn {
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+}
+
+.fw-accordion__quick-btn--approve {
+  background: #4285F4 !important;
+  color: #fff !important;
+}
+
+.fw-accordion__quick-btn--deny {
+  background: transparent;
+  color: #8C8C96;
+  border: 1px solid rgba(0,0,0,0.08);
+}
