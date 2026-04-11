@@ -139,15 +139,21 @@ export const PeoplePicker = forwardRef<HTMLDivElement, PeoplePickerProps>(
       <div ref={ref} className={rootCls} aria-labelledby={`${id}-label`}>
         <span id={`${id}-label`} className="fw-people-picker__label">
           {config.label}
+          {people.length > 0 && (
+            <span className="fw-people-picker__count" aria-label={`${people.length} ${people.length === 1 ? 'person' : 'people'} selected`}>
+              {people.length} {people.length === 1 ? 'person' : 'people'}
+            </span>
+          )}
         </span>
 
-        <div className="fw-people-picker__chips">
+        <div className="fw-people-picker__chips" style={error ? { borderColor: '#ef4444' } : undefined}>
           {people.map((person) => {
             const removing = removingIds.has(person.id);
             return (
               <span
                 key={person.id}
                 className={`fw-chip${removing ? ' fw-chip--removing' : ''}`}
+                aria-label={person.name}
               >
                 <span
                   className="fw-people-picker__avatar"

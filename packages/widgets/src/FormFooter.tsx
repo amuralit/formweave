@@ -11,7 +11,7 @@ export interface FormFooterProps {
   className?: string;
 }
 
-export const FormFooter = forwardRef<HTMLDivElement, FormFooterProps>(
+export const FormFooter = forwardRef<HTMLElement, FormFooterProps>(
   function FormFooter(
     {
       actions,
@@ -32,7 +32,7 @@ export const FormFooter = forwardRef<HTMLDivElement, FormFooterProps>(
       const rightActions = actions.filter((a) => a.position !== 'left');
 
       return (
-        <div ref={ref} className={rootCls}>
+        <footer ref={ref} className={rootCls} role="contentinfo">
           <div className="fw-form-footer__left">
             {leftActions.map((action, i) => (
               <button
@@ -61,13 +61,13 @@ export const FormFooter = forwardRef<HTMLDivElement, FormFooterProps>(
               </button>
             ))}
           </div>
-        </div>
+        </footer>
       );
     }
 
     // Default: Cancel + Submit
     return (
-      <div ref={ref} className={rootCls}>
+      <footer ref={ref} className={rootCls} role="contentinfo">
         <div className="fw-form-footer__left" />
         <div className="fw-form-footer__right">
           {onCancel && (
@@ -81,7 +81,7 @@ export const FormFooter = forwardRef<HTMLDivElement, FormFooterProps>(
           )}
           {onSubmit && (
             <button
-              type="button"
+              type="submit"
               className="fw-form-footer__btn fw-form-footer__btn--primary"
               onClick={onSubmit}
               disabled={submitDisabled || submitLoading}
@@ -93,7 +93,7 @@ export const FormFooter = forwardRef<HTMLDivElement, FormFooterProps>(
             </button>
           )}
         </div>
-      </div>
+      </footer>
     );
   },
 );

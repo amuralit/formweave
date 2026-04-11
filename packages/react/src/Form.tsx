@@ -321,6 +321,34 @@ interface AccordionWrapperProps {
 function AccordionWrapper({ title, defaultOpen, mode, onQuickApprove, onQuickDeny, children }: AccordionWrapperProps) {
   const [open, setOpen] = useState(defaultOpen ?? true);
   const isApproval = mode === 'approval';
+  const bodyRef = useRef<HTMLDivElement>(null);
+
+  // Animate height on toggle
+  useEffect(() => {
+    const el = bodyRef.current;
+    if (!el) return;
+    if (open) {
+      el.style.height = '0px';
+      el.style.overflow = 'hidden';
+      requestAnimationFrame(() => {
+        el.style.transition = 'height 0.25s ease';
+        el.style.height = `${el.scrollHeight}px`;
+        const handler = () => {
+          el.style.height = 'auto';
+          el.style.overflow = '';
+          el.style.transition = '';
+        };
+        el.addEventListener('transitionend', handler, { once: true });
+      });
+    } else {
+      el.style.height = `${el.scrollHeight}px`;
+      el.style.overflow = 'hidden';
+      requestAnimationFrame(() => {
+        el.style.transition = 'height 0.25s ease';
+        el.style.height = '0px';
+      });
+    }
+  }, [open]);
 
   return (
     <div className={`fw-accordion ${open ? 'fw-accordion--open' : ''}`}>
@@ -344,7 +372,9 @@ function AccordionWrapper({ title, defaultOpen, mode, onQuickApprove, onQuickDen
           {open ? '\u25B2' : '\u25BC'}
         </span>
       </div>
-      {open && <div className="fw-accordion__body">{children}</div>}
+      <div ref={bodyRef} className="fw-accordion__body">
+        {children}
+      </div>
     </div>
   );
 }
@@ -539,8 +569,23 @@ export function Form(props: FormProps) {
         store.getState().setError(field.path, errors[field.path]);
       }
 
-      // If there are errors, don't submit
+      // If there are errors, scroll to and focus the first error field
       if (Object.keys(errors).length > 0) {
+        const firstErrorPath = analysis.fields.find((f) => errors[f.path])?.path;
+        if (firstErrorPath && formRef.current) {
+          const errorEl = formRef.current.querySelector(
+            `[class*="fw-field--has-error"], [aria-invalid="true"]`
+          ) as HTMLElement | null;
+          if (errorEl) {
+            errorEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            requestAnimationFrame(() => {
+              const focusable = errorEl.querySelector<HTMLElement>(
+                'input, textarea, select, button, [tabindex]'
+              );
+              focusable?.focus();
+            });
+          }
+        }
         return;
       }
 
@@ -806,6 +851,7 @@ export function Form(props: FormProps) {
         onSubmit={handleSubmit}
         noValidate
         aria-label={heading || analysis.title || 'Form'}
+        data-formweave=""
       >
         {/* Header for card and panel modes (accordion has its own title) */}
         {(display === 'card' || display === 'panel') &&

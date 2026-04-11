@@ -64,37 +64,30 @@ export const ProgressiveDisclosure = forwardRef<HTMLDivElement, ProgressiveDiscl
 
     return (
       <div ref={ref} className={rootCls}>
-        {!expanded && (
-          <button
-            type="button"
-            className="fw-progressive__trigger"
-            onClick={toggle}
-            aria-expanded={expanded}
-            aria-controls={`${id}-content`}
+        <button
+          type="button"
+          className={expanded ? 'fw-progressive__collapse' : 'fw-progressive__trigger'}
+          onClick={toggle}
+          aria-expanded={expanded}
+          aria-controls={`${id}-content`}
+          aria-label={expanded ? 'Collapse details' : undefined}
+        >
+          <span
+            className="fw-progressive__icon"
+            aria-hidden="true"
+            style={{
+              display: 'inline-block',
+              transition: 'transform 0.2s ease',
+              transform: expanded ? 'rotate(45deg)' : 'rotate(0deg)',
+            }}
           >
-            <span className="fw-progressive__icon" aria-hidden="true">
-              +
-            </span>
-            <span className="fw-progressive__text">
-              <span className="fw-progressive__label">{label}</span>
-              <span className="fw-progressive__hint">{hint}</span>
-            </span>
-          </button>
-        )}
-
-        {expanded && (
-          <button
-            type="button"
-            className="fw-progressive__collapse"
-            onClick={toggle}
-            aria-label="Collapse details"
-          >
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ marginRight: 6 }}>
-              <path d="M9 7.5L6 4.5L3 7.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-            Less
-          </button>
-        )}
+            +
+          </span>
+          <span className="fw-progressive__text">
+            <span className="fw-progressive__label">{expanded ? 'Less' : label}</span>
+            {!expanded && <span className="fw-progressive__hint">{hint}</span>}
+          </span>
+        </button>
 
         <div
           id={`${id}-content`}

@@ -66,7 +66,7 @@ export const NumberStepper = forwardRef<HTMLDivElement, WidgetProps<number>>(
           {config.label}
         </label>
 
-        <div className="fw-number-stepper__field" onClick={() => !focused && handleFocus()}>
+        <div className="fw-number-stepper__field" onClick={() => !focused && handleFocus()} style={error ? { borderColor: '#ef4444' } : undefined}>
           {focused ? (
             <input
               ref={inputRef}
@@ -83,6 +83,7 @@ export const NumberStepper = forwardRef<HTMLDivElement, WidgetProps<number>>(
               step={step}
               disabled={disabled}
               readOnly={readOnly}
+              aria-invalid={!!error}
               autoFocus
             />
           ) : (
@@ -92,8 +93,14 @@ export const NumberStepper = forwardRef<HTMLDivElement, WidgetProps<number>>(
           )}
         </div>
 
+        {focused && !error && (
+          <span className="fw-number-stepper__hint" aria-hidden="true">
+            Use &uarr;&darr; arrow keys
+          </span>
+        )}
+
         {error && (
-          <span className="fw-number-stepper__error" role="alert">{error}</span>
+          <span className="fw-number-stepper__error" role="alert" style={{ color: '#ef4444' }}>{error}</span>
         )}
       </div>
     );

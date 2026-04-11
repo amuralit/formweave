@@ -86,14 +86,14 @@ export const PillSelector = forwardRef<HTMLDivElement, WidgetProps<string>>(
                 disabled={disabled}
                 title={descriptions[i] || undefined}
               >
-                {opt}
+                {opt.charAt(0).toUpperCase() + opt.slice(1)}
               </button>
             );
           })}
         </div>
 
         {error && (
-          <span className="fw-pill-selector__error" role="alert">
+          <span className="fw-pill-selector__error" role="alert" style={{ color: '#ef4444' }}>
             {error}
           </span>
         )}

@@ -13,7 +13,7 @@ export interface FormHeaderProps {
 
 const COLOR_RE = /^(#[0-9a-fA-F]{3,8}|rgb\([^)]+\)|rgba\([^)]+\)|hsl\([^)]+\)|hsla\([^)]+\)|[a-zA-Z]{1,30})$/;
 
-export const FormHeader = forwardRef<HTMLDivElement, FormHeaderProps>(
+export const FormHeader = forwardRef<HTMLElement, FormHeaderProps>(
   function FormHeader(
     {
       serviceName,
@@ -32,7 +32,7 @@ export const FormHeader = forwardRef<HTMLDivElement, FormHeaderProps>(
     const safeColor = serviceColor && COLOR_RE.test(serviceColor) ? serviceColor : undefined;
 
     return (
-      <div ref={ref} className={rootCls}>
+      <header ref={ref} className={rootCls} role="banner" style={{ borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
         {/* Accent gradient bar */}
         <div
           className="fw-form-header__accent"
@@ -86,7 +86,7 @@ export const FormHeader = forwardRef<HTMLDivElement, FormHeaderProps>(
             <p className="fw-form-header__description">{description}</p>
           )}
         </div>
-      </div>
+      </header>
     );
   },
 );

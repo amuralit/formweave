@@ -55,9 +55,11 @@ export const Toggle = forwardRef<HTMLButtonElement, WidgetProps<boolean>>(
           role="switch"
           aria-checked={checked}
           className="fw-toggle__track"
+          style={error ? { borderColor: '#ef4444', boxShadow: '0 0 0 1px #ef4444' } : undefined}
           onClick={toggle}
           onKeyDown={handleKeyDown}
           disabled={disabled}
+          aria-label={`${config.label}: ${checked ? 'on' : 'off'}`}
           aria-readonly={readOnly || undefined}
         >
           <span className="fw-toggle__knob" />

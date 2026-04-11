@@ -59,8 +59,19 @@ export const WizardNav = forwardRef<HTMLDivElement, WizardNavProps>(
                       disabled={i > currentPage}
                       aria-label={`Step ${i + 1}: ${page.label}`}
                     >
-                      {i + 1}
+                      {status === 'completed' ? (
+                        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                          <path d="M3 8.5L6.5 12L13 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      ) : (
+                        i + 1
+                      )}
                     </button>
+                    {page.label && (
+                      <span className="fw-wizard-nav__step-label" aria-hidden="true">
+                        {page.label}
+                      </span>
+                    )}
                     {i < totalPages - 1 && (
                       <span className={`fw-wizard-nav__connector${i < currentPage ? ' fw-wizard-nav__connector--filled' : ''}`} />
                     )}

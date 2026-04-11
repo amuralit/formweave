@@ -130,8 +130,9 @@ export const DropdownSelect = forwardRef<HTMLDivElement, WidgetProps<string>>(
       return () => document.removeEventListener('mousedown', handler);
     }, [open, ref, closeDropdown]);
 
+    const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
     const displayValue =
-      value != null && value !== '' ? value : placeholder ?? 'Select...';
+      value != null && value !== '' ? capitalize(value) : placeholder ?? 'Select...';
 
     const rootCls = [
       'fw-dropdown',
@@ -153,6 +154,7 @@ export const DropdownSelect = forwardRef<HTMLDivElement, WidgetProps<string>>(
           ref={triggerRef}
           type="button"
           className="fw-dropdown__trigger"
+          style={error ? { borderColor: '#ef4444' } : undefined}
           onClick={() => (open ? closeDropdown() : openDropdown())}
           onKeyDown={handleTriggerKeyDown}
           disabled={disabled}
@@ -185,6 +187,7 @@ export const DropdownSelect = forwardRef<HTMLDivElement, WidgetProps<string>>(
               className="fw-dropdown__list"
               role="listbox"
               aria-labelledby={`${id}-label`}
+              aria-activedescendant={highlightIdx >= 0 ? `${id}-opt-${highlightIdx}` : undefined}
             >
               {filtered.length === 0 && (
                 <li className="fw-dropdown__empty">No results</li>
@@ -200,6 +203,7 @@ export const DropdownSelect = forwardRef<HTMLDivElement, WidgetProps<string>>(
                 return (
                   <li
                     key={opt}
+                    id={`${id}-opt-${i}`}
                     role="option"
                     aria-selected={selected}
                     className={[
@@ -215,7 +219,7 @@ export const DropdownSelect = forwardRef<HTMLDivElement, WidgetProps<string>>(
                       descriptions[options.indexOf(opt)] || undefined
                     }
                   >
-                    {opt}
+                    {capitalize(opt)}
                   </li>
                 );
               })}

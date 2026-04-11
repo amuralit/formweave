@@ -28,6 +28,24 @@ function formatDateDisplay(iso: string): { dayNum: string; dayName: string; mont
   return { dayNum, dayName, monthYear, timeFormatted };
 }
 
+function relativeTime(iso: string): string {
+  const d = new Date(iso);
+  const now = new Date();
+  if (isNaN(d.getTime())) return '';
+  const diffMs = d.getTime() - now.getTime();
+  const absDiff = Math.abs(diffMs);
+  const mins = Math.round(absDiff / 60000);
+  if (mins < 1) return 'now';
+  const isFuture = diffMs > 0;
+  const prefix = isFuture ? 'in ' : '';
+  const suffix = isFuture ? '' : ' ago';
+  if (mins < 60) return `${prefix}${mins}m${suffix}`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `${prefix}${hours}h${suffix}`;
+  const days = Math.floor(hours / 24);
+  return `${prefix}${days}d${suffix}`;
+}
+
 function durationBetween(start: string, end: string): string {
   const s = new Date(start);
   const e = new Date(end);
@@ -106,6 +124,8 @@ export const DateTimeBlock = forwardRef<HTMLDivElement, WidgetProps<string | Dat
         ? durationBetween(normalizedValue.start, normalizedValue.end)
         : '';
 
+    const startRelative = normalizedValue.start ? relativeTime(normalizedValue.start) : '';
+
     const handleDateChange = useCallback(
       (field: 'start' | 'end', dateStr: string) => {
         const prev = normalizedValue;
@@ -156,7 +176,11 @@ export const DateTimeBlock = forwardRef<HTMLDivElement, WidgetProps<string | Dat
       .join(' ');
 
     return (
-      <div ref={ref} className={rootCls} aria-labelledby={`${id}-label`}>
+      <div ref={ref} className={rootCls} aria-labelledby={`${id}-label`} aria-label={
+        startDisplay
+          ? `${config.label}: ${startDisplay.dayName} ${startDisplay.dayNum} ${startDisplay.monthYear}${startDisplay.timeFormatted ? ` at ${startDisplay.timeFormatted}` : ''}${endDisplay ? ` to ${endDisplay.dayName} ${endDisplay.dayNum} ${endDisplay.monthYear}${endDisplay.timeFormatted ? ` at ${endDisplay.timeFormatted}` : ''}` : ''}`
+          : `${config.label}: not set`
+      }>
         <span id={`${id}-label`} className="fw-datetime__label">
           {config.label}
         </span>
@@ -165,6 +189,7 @@ export const DateTimeBlock = forwardRef<HTMLDivElement, WidgetProps<string | Dat
           <button
             type="button"
             className="fw-datetime__display"
+            style={error ? { borderColor: '#ef4444', borderWidth: 1, borderStyle: 'solid' } : undefined}
             onClick={() => {
               if (!disabled && !readOnly) setEditMode(true);
             }}
@@ -208,6 +233,9 @@ export const DateTimeBlock = forwardRef<HTMLDivElement, WidgetProps<string | Dat
                         <span className="fw-datetime__month">{startDisplay.monthYear}</span>
                       </span>
                       <span className="fw-datetime__time">{startDisplay.timeFormatted || startTime}</span>
+                      {!paired && startRelative && (
+                        <span className="fw-datetime__relative">{startRelative}</span>
+                      )}
                     </div>
                     {paired && (
                       <>

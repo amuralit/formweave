@@ -83,6 +83,15 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
     const isPhone = /^(phone|telephone|mobile|tel|cell)$/i.test(config.path);
     const inputType = config.constraints.format === 'email' ? 'email' : isPhone ? 'tel' : 'text';
 
+    // Smarter inputMode based on field semantics
+    const inputMode: React.HTMLAttributes<HTMLInputElement>['inputMode'] = (() => {
+      if (config.constraints.format === 'email') return 'email';
+      if (config.constraints.format === 'uri' || config.constraints.format === 'url') return 'url';
+      if (isPhone) return 'tel';
+      if (/amount|price|cost|quantity|count/i.test(config.path)) return 'numeric';
+      return undefined;
+    })();
+
     const formatPhone = useCallback((raw: string): string => {
       const digits = raw.replace(/\D/g, '').slice(0, 10);
       if (digits.length <= 3) return digits;
@@ -158,7 +167,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
           )}
         </label>
 
-        <div className="fw-text-input__field">
+        <div className="fw-text-input__field" style={error ? { borderColor: '#ef4444' } : undefined}>
           {icon && <span className="fw-text-input__icon">{icon}</span>}
           <input
             ref={inputRef}
@@ -174,6 +183,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
             autoFocus={autoFocus}
             placeholder={placeholder || getContextualPlaceholder(config)}
             maxLength={maxLength}
+            inputMode={inputMode}
             autoComplete={autoCompleteAttr}
             aria-invalid={!!error}
             aria-describedby={error ? `${id}-error` : undefined}
@@ -198,14 +208,14 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
           )}
         </div>
 
-        {(error || maxLength != null) && (
+        {(error || (maxLength != null && (value ?? '').length > maxLength * 0.8)) && (
           <div className="fw-text-input__footer">
             {error && (
               <span id={`${id}-error`} className="fw-text-input__error" role="alert">
                 {error}
               </span>
             )}
-            {maxLength != null && (
+            {maxLength != null && (value ?? '').length > maxLength * 0.8 && (
               <span className="fw-text-input__count">
                 {(value ?? '').length}/{maxLength}
               </span>

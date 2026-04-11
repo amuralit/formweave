@@ -81,6 +81,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, WidgetProps<string>>(
           ref={textareaRef}
           id={id}
           className="fw-textarea__native"
+          style={error ? { borderColor: '#ef4444' } : undefined}
           value={value ?? ''}
           onChange={handleChange}
           disabled={disabled}

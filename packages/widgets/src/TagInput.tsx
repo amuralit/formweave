@@ -77,6 +77,11 @@ export const TagInput = forwardRef<HTMLDivElement, WidgetProps<string[]>>(
       <div ref={ref} className={rootCls}>
         <label id={`${id}-label`} className="fw-tag-input__label">
           {config.label}
+          {tags.length > 0 && (
+            <span className="fw-tag-input__count" aria-label={`${tags.length} ${tags.length === 1 ? 'tag' : 'tags'}`}>
+              {tags.length}
+            </span>
+          )}
         </label>
 
         <div
