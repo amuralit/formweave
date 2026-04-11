@@ -47,9 +47,6 @@ export const TitleInput = forwardRef<HTMLInputElement, WidgetProps<string>>(
 
     return (
       <div className={rootCls}>
-        <label htmlFor={id} className="fw-title-input__label">
-          {config.description || config.label}
-        </label>
         <div className="fw-title-input__wrapper" onClick={focusInput}>
           <input
             ref={inputEl}

@@ -4046,9 +4046,9 @@
   border-radius: 14px 14px 0 0;
 }
 
-/* Rule 10 — Compact: 20px top, 24px sides, 16px bottom */
+/* Rule 10 — Compact: 10px top, 16px sides, 8px bottom */
 .fw-form-header__body {
-  padding: 20px 24px 16px;
+  padding: 10px 16px 8px;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -4103,7 +4103,7 @@
 
 /* Rule 10 — Within groups: 8-10px gap */
 .fw-form__fields {
-  padding: 8px 20px 16px;
+  padding: 6px 16px 12px;
   display: flex;
   flex-direction: column;
   gap: 10px;

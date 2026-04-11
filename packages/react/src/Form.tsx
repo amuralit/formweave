@@ -167,9 +167,6 @@ const FieldRenderer = memo(function FieldRenderer({ field, onBlur, onChange }: F
           onToolCall={onToolCall}
           onFieldsPopulate={handleFieldsPopulate}
         />
-        {field.description && !displayError && !isTitleInput && (
-          <p className="fw-field__description">{field.description}</p>
-        )}
       </div>
     </ConditionalWrapper>
   );
@@ -288,7 +285,7 @@ function GroupedFieldRenderer({ fields, onBlur, onChange }: GroupedFieldRenderer
             role="group"
             aria-label={field.groupLabel}
           >
-            {field.groupLabel && (
+            {field.groupLabel && !field.group?.startsWith('datetime') && (
               <span className="fw-field-group__label">{field.groupLabel}</span>
             )}
             <div className="fw-field-group__fields">
@@ -606,7 +603,7 @@ export function Form(props: FormProps) {
       .slice(0, 3)
       .map((f) => f.label.toLowerCase());
     if (names.length === 0) return '';
-    return `Add ${names.join(', ')}${nonEssentialFields.length > 3 ? ', ...' : ''}`;
+    return `${names.join(', ')}${nonEssentialFields.length > 3 ? ', ...' : ''}`;
   }, [nonEssentialFields]);
 
   // ─── 16. Effective submit label ───
