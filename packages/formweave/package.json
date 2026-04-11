@@ -18,7 +18,7 @@
   "files": ["dist"],
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts --external react --external react-dom && cp ../theme/dist/styles.css dist/styles.css 2>/dev/null || true",
-    "test": "vitest run",
+    "test": "vitest run --passWithNoTests",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist"
   },

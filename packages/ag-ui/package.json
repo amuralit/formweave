@@ -17,7 +17,7 @@
   "files": ["dist"],
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts --external react --external react-dom --external @formweave/react --external @formweave/core --external @formweave/widgets --external @formweave/theme",
-    "test": "vitest run",
+    "test": "vitest run --passWithNoTests",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist"
   },
