@@ -68,11 +68,12 @@
   outline: none !important;
 }
 
-/* Rule 1 — No visible native form elements */
-.fw-form input,
-.fw-form textarea,
-.fw-form select,
-.fw-form button {
+/* Rule 1 — No visible native form elements. :where() zeroes specificity
+   so component styles (.fw-form-footer__btn--primary) can override. */
+.fw-form :where(input),
+.fw-form :where(textarea),
+.fw-form :where(select),
+.fw-form :where(button) {
   appearance: none;
   -webkit-appearance: none;
   border: none;
@@ -2091,4 +2092,83 @@
 
 .fw-compact__action:active {
   transform: scale(0.97);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   NUCLEAR FIX: Force all accent-colored elements to be visible.
+   The button reset (.fw-form button { background: transparent })
+   has specificity (0,1,1) which beats component classes at (0,1,0).
+   Using !important guarantees visibility.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* Primary buttons — MUST be blue with white text */
+.fw-form-footer__btn--primary,
+.fw-wizard-nav__btn--next,
+.fw-wizard-nav__btn--submit,
+.fw-accordion__quick-btn--approve,
+.fw-compact__action {
+  background: #4285F4 !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 8px;
+  padding: 6px 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.fw-form-footer__btn--primary:hover,
+.fw-wizard-nav__btn--next:hover,
+.fw-wizard-nav__btn--submit:hover,
+.fw-accordion__quick-btn--approve:hover,
+.fw-compact__action:hover {
+  background: #3367D6 !important;
+}
+
+/* Active pills — MUST be blue with white text */
+.fw-pill-selector__pill--active {
+  background: #4285F4 !important;
+  color: #fff !important;
+  border-color: #4285F4 !important;
+}
+
+/* Active wizard step — MUST be blue circle with white number */
+.fw-wizard-nav__step--active {
+  background: #4285F4 !important;
+  border-color: #4285F4 !important;
+  color: #fff !important;
+}
+
+/* Completed wizard step — green */
+.fw-wizard-nav__step--completed {
+  background: #22c55e !important;
+  border-color: #22c55e !important;
+  color: #fff !important;
+}
+
+/* Outline/cancel buttons — visible border */
+.fw-form-footer__btn--outline,
+.fw-wizard-nav__btn--back,
+.fw-accordion__quick-btn--deny {
+  background: transparent !important;
+  border: 1px solid rgba(0,0,0,0.12) !important;
+  color: #555 !important;
+  border-radius: 8px;
+  padding: 6px 16px;
+  cursor: pointer;
+}
+
+/* Danger button */
+.fw-form-footer__btn--danger {
+  background: #e53e3e !important;
+  color: #fff !important;
+}
+
+/* DateTime accent border */
+.fw-datetime__display {
+  border-left: 2px solid #4285F4 !important;
+}
+
+/* Progress bar fill */
+.fw-wizard-nav__progress-fill {
+  background: #4285F4 !important;
 }
