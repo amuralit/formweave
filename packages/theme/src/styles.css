@@ -3105,3 +3105,37 @@
   border: 1px dashed rgba(0,0,0,0.06);
   min-height: 48px;
 }
+
+/* ══════════════════════════════════════════════════════════════════
+   Inline form — compact, chat-embedded
+   ══════════════════════════════════════════════════════════════════ */
+
+.fw-form--inline .fw-form__fields {
+  padding: 0;
+  gap: 4px;
+}
+
+.fw-form--inline .fw-form-footer {
+  padding: 8px 0;
+  border-top: none;
+}
+
+/* Toggle: full-width row with label left, switch right */
+.fw-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 8px;
+}
+
+/* Inline toggles should be tighter */
+.fw-form--inline .fw-toggle {
+  padding: 2px 0;
+}
+
+/* Inline text fields: tighter */
+.fw-form--inline .fw-text-input,
+.fw-form--inline .fw-textarea {
+  margin-bottom: 0;
+}
